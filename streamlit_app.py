@@ -16,6 +16,9 @@ if "logbook_data" not in st.session_state:
     st.session_state["logbook_data"] = []
 if "target_belajar" not in st.session_state:
     st.session_state["target_belajar"] = "Belum ditentukan"
+# Trik Kunci: Penanda untuk memicu petasan setelah pindah halaman
+if "pemicu_petasan" not in st.session_state:
+    st.session_state["pemicu_petasan"] = False
 
 # --- HALAMAN 1: FORM LOGIN ---
 if not st.session_state["login_sukses"]:
@@ -32,14 +35,9 @@ if not st.session_state["login_sukses"]:
             
             if tombol_login:
                 if username == USER_VALID and password == PASSWORD_VALID:
-                    # TENTUKAN STATUS LOGIN DULU
                     st.session_state["login_sukses"] = True
-                    
-                    # 💥 TEMBAKKAN PETASAN DI SINI
-                    st.balloons()
-                    
-                    # LANGSUNG RE-RUN AGAR MASUK KE HALAMAN UTAMA BERSAMA PETASANNYA
-                    st.rerun()
+                    st.session_state["pemicu_petasan"] = True  # Aktifkan pemicu petasan
+                    st.rerun()  # Pindah halaman dengan aman
                 else:
                     st.error("❌ Username atau Password salah! Silakan periksa kembali.")
 
@@ -53,20 +51,27 @@ else:
         st.markdown("---")
         
         st.markdown("### 🗺️ Menu Navigasi")
-        pilihan_halaman = st.radio(
+        pilihan_halaman = st.sidebar.radio(
             "Pilih Halaman Kerja:",
-            ["🏠 Beranda Lab", "⚡ Identifikasi Ion", "🧪 Rak Reagen Organik", "📋 Logbook Pengujian"]
+            ["🏠 Beranda Lab", "⚡ Identifikasi Ion", "🧪 Rak Reagen Organik", "📚 Referensi & Video", "📋 Logbook Pengujian"]
         )
         
         st.markdown("---")
         if st.button("🚪 Keluar (Logout)"):
             st.session_state["login_sukses"] = False
+            st.session_state["pemicu_petasan"] = False
             st.rerun()
 
     # --- KONTEN HALAMAN UTAMA (SISI KANAN) ---
     
     # ================= KONDISI A: BERANDA LAB =================
     if pilihan_halaman == "🏠 Beranda Lab":
+        # EKSEKUSI PETASAN DI SINI (Tepat saat halaman Beranda pertama kali dimuat)
+        if st.session_state["pemicu_petasan"]:
+            st.balloons()
+            st.success("🎉 *Yey kamu berhasil login!* Selamat datang kembali di laboratorium virtual.")
+            st.session_state["pemicu_petasan"] = False  # Matikan pemicu agar tidak meledak terus saat klik menu lain
+
         st.markdown("<h2 style='text-align: center; color: #0284C7;'>👋 SELAMAT DATANG DI ASISTEN LAB ANALITIK</h2>", unsafe_allow_html=True)
         st.markdown("<p style='text-align: center; color: #64748B;'>Sistem Informasi Manajemen Reagen & Instrumentasi Virtual</p>", unsafe_allow_html=True)
         st.markdown("---")
@@ -86,8 +91,8 @@ else:
             <div style='background-color: #FFFFFF; border: 1px solid #E2E8F0; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 25px;'>
                 <h4 style='color: #1E293B; margin: 0;'>Halo, Analis Kimia! 🧪</h4>
                 <p style='color: #475569; margin-top: 8px; line-height: 1.5; font-size: 15px;'>
-                    Selamat datang di platform asisten laboratorium virtual. Web ini sekarang dilengkapi dengan dua modul utama: 
-                    <b>Identifikasi Kation/Anion Anorganik</b> dan <b>Uji Gugus Fungsi Organik</b>. Silakan tentukan target belajar Anda di bawah sebelum memulai praktikum virtual!
+                    Selamat datang di platform asisten laboratorium virtual. Web ini sekarang dilengkapi dengan modul utama: 
+                    <b>Identifikasi Kation/Anion Anorganik</b>, <b>Uji Gugus Fungsi Organik</b>, serta <b>Referensi Video & Buku Panduan</b> resmi. Silakan tentukan target belajar Anda di bawah sebelum memulai praktikum virtual!
                 </p>
             </div>
         """, unsafe_allow_html=True)
@@ -218,7 +223,7 @@ else:
                     elif tahap_3_gol4 == "Berupa Filtrat (Ca2+)":
                         st.write("➡️ Tambahkan $H_2C_2O_4$ dan $NH_4OH$")
                         st.success("✨ Terbentuk endapan $CaC_2O_4$ putih. Kation: *Kalsium ($Ca^{2+}$)*")
-                        nama_reagen, kesimpulan_gugus = "Filtrat -> K2CrO4 Filtrat -> H2C2O4 + NH4OH", "Kation Kalsium (Ca²⁺)"
+                        nama_reagen, kes原理 = "Filtrat -> K2CrO4 Filtrat -> H2C2O4 + NH4OH", "Kation Kalsium (Ca²⁺)"
 
         # 2. UJI ANION
         elif jenis_analisis == "Uji Anion (Non-Logam)":
@@ -276,7 +281,7 @@ else:
                 st.success("✨ Logam Teridentifikasi: *Kalium ($K^+$)*")
                 nama_reagen, kesimpulan_gugus = "Flame Test", "Logam Kalium (K⁺)"
 
-        # 💥 TRIGGER PETASAN & APRESIASI (ANORGANIK)
+        # CATAT LOGBOOK (ANORGANIK)
         if kesimpulan_gugus != "-":
             st.markdown("---")
             if st.button("💾 Catat Hasil Uji Anorganik ke Logbook"):
@@ -287,9 +292,7 @@ else:
                     "Reagen Digunakan": nama_reagen,
                     "Hasil Identifikasi": kesimpulan_gugus
                 })
-                # Memunculkan Efek Petasan (Balloons)
-                st.balloons()
-                st.success("🎉 *Yey kamu berhasil!* Kompetensi praktikum tercapai dan data terekam di Logbook digital.")
+                st.success("📝 Data pengujian anorganik berhasil direkam ke Logbook digital.")
                 st.toast("Data terekam!", icon="📝")
 
     # ================= KONDISI C: RAK REAGEN ORGANIK =================
@@ -369,7 +372,7 @@ else:
                 </div>
             """, unsafe_allow_html=True)
 
-        # 💥 TRIGGER PETASAN & APRESIASI (ORGANIK)
+        # CATAT LOGBOOK (ORGANIK)
         if sakelar_aktif == 1:
             st.markdown("---")
             if st.button("💾 Catat Hasil Uji Organik ke Logbook"):
@@ -380,12 +383,53 @@ else:
                     "Reagen Digunakan": nama_reagen,
                     "Hasil Identifikasi": kesimpulan_gugus
                 })
-                # Memunculkan Efek Petasan (Balloons)
-                st.balloons()
-                st.success("🎉 *Yey kamu berhasil!* Analisis gugus fungsi tersimpan aman di Logbook.")
+                st.success("📝 Data pengujian organik berhasil direkam ke Logbook digital.")
                 st.toast("Data terekam!", icon="📝")
 
-    # ================= KONDISI D: TAMPILAN LOGBOOK DATA =================
+    # ================= KONDISI D: REFERENSI & MEDIA VIDEO =================
+    elif pilihan_halaman == "📚 Referensi & Video":
+        st.markdown("<h2 style='text-align: center; color: #0284C7;'>📚 REFERENSI METODE & MEDIA BELAJAR VIDEO</h2>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; color: #64748B;'>Media literatur buku teks resmi dan video demonstrasi laboratorium</p>", unsafe_allow_html=True)
+        st.markdown("---")
+
+        col_buku, col_yt = st.columns([1, 1])
+
+        with col_buku:
+            st.markdown("### 📖 Buku Teks & Panduan Standar")
+            st.markdown("""
+            Gunakan literatur ilmiah tepercaya di bawah ini untuk menyusun dasar teori laporan praktikum:
+            1. *Vogel's Qualitative Inorganic Analysis (G. Svehla)*
+               * Fokus: Skema pemisahan kation golongan I-V dan pembentukan endapan spesifik.
+            2. *Vogel's Textbook of Practical Organic Chemistry*
+               * Fokus: Prosedur uji reaksi penentuan gugus fungsi aldehid, keton, dan asam karboksilat.
+            3. *Official Methods of Analysis (AOAC International)*
+               * Fokus: Regulasi standar pengambilan sampel (sampling) serta preparasi sampel industri.
+            """)
+            st.info("💡 Tips Literatur: Selalu catat edisi buku dan halaman resep reagen sebagai validitas data analis.")
+
+        with col_yt:
+            st.markdown("### 📺 Video Demonstrasi Laboratorium")
+            st.markdown("Silakan pilih topik video praktikum virtual yang ingin Anda tonton langsung di bawah ini:")
+            
+            pilihan_video = st.selectbox(
+                "Pilih Materi Video:",
+                ["Uji Kation Golongan I (Vogel)", "Uji Gugus Fungsi Organik (Aldehid & Keton)", "Sistem Keselamatan Kerja Lab (K3)"]
+            )
+
+            # Menampilkan player YouTube asli berdasarkan pilihan user
+            if pilihan_video == "Uji Kation Golongan I (Vogel)":
+                st.caption("🎥 Demonstrasi Reaksi Pengendapan Perak ($Ag^+$), Timbal ($Pb^{2+}$), & Merkuri ($Hg_2^{2+}$)")
+                st.video("https://www.youtube.com/watch?v=ExmS1u_Fw8Y")
+                
+            elif pilihan_video == "Uji Gugus Fungsi Organik (Aldehid & Keton)":
+                st.caption("🎥 Perbandingan Hasil Uji Reagen Schiff, Fehling, dan Tollens pada Senyawa Karbonil")
+                st.video("https://www.youtube.com/watch?v=mID47oFvXoo")
+                
+            elif pilihan_video == "Sistem Keselamatan Kerja Lab (K3)":
+                st.caption("🎥 Prosedur Penanganan Hazard, Penggunaan APD, dan Budaya 5S/Kaizen di Lab Industri")
+                st.video("https://www.youtube.com/watch?v=BRDApYgvDqQ")
+
+    # ================= KONDISI E: TAMPILAN LOGBOOK DATA =================
     elif pilihan_halaman == "📋 Logbook Pengujian":
         st.markdown("<h2 style='text-align: center; color: #0284C7;'>📋 LOGBOOK DIGITAL LABORATORIUM</h2>", unsafe_allow_html=True)
         st.markdown("<p style='text-align: center; color: #64748B;'>Daftar riwayat rekaman pengujian & evaluasi target belajar</p>", unsafe_allow_html=True)
