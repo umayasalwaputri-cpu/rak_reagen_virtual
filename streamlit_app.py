@@ -1,151 +1,86 @@
 import streamlit as st
-import pandas as pd
-import math
-from pathlib import Path
 
-# Set the title and favicon that appear in the Browser's tab bar.
-st.set_page_config(
-    page_title='GDP dashboard',
-    page_icon=':earth_americas:', # This is an emoji shortcode. Could be a URL too.
-)
+# Konfigurasi Halaman Web
+st.set_page_config(page_title="Interactive Reagent Rack", page_icon="🧪", layout="centered")
 
-# -----------------------------------------------------------------------------
-# Declare some useful functions.
+# --- JUDUL ELEGAN ---
+st.markdown("<h2 style='text-align: center; color: #0284C7; font-family: sans-serif;'>🧪 RAK REAGEN VIRTUAL</h2>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #64748B;'>Nyalakan sakelar reagen di bawah untuk menguji sampel misterius Anda!</p>", unsafe_allow_html=True)
+st.markdown("---")
 
-@st.cache_data
-def get_gdp_data():
-    """Grab GDP data from a CSV file.
+# --- AREA MEJA KERJA LAB (INPUT SAKELAR) ---
+st.markdown("### 🎛️ Panel Sakelar Reagen (On / Off)")
 
-    This uses caching to avoid having to read the file every time. If we were
-    reading from an HTTP endpoint instead of a file, it's a good idea to set
-    a maximum age to the cache with the TTL argument: @st.cache_data(ttl='1d')
-    """
+# Membuat 3 kolom rapi untuk sakelar reagen
+col_reg1, col_reg2, col_reg3 = st.columns(3)
 
-    # Instead of a CSV on disk, you could read from an HTTP endpoint here too.
-    DATA_FILENAME = Path(__file__).parent/'data/gdp_data.csv'
-    raw_gdp_df = pd.read_csv(DATA_FILENAME)
+with col_reg1:
+    st.markdown("*Uji Lakmus*")
+    sakelar_lakmus = st.toggle("Celup Lakmus Biru", value=False)
 
-    MIN_YEAR = 1960
-    MAX_YEAR = 2022
+with col_reg2:
+    st.markdown("*Uji Schiff*")
+    sakelar_schiff = st.toggle("Tetes Reagen Schiff", value=False)
 
-    # The data above has columns like:
-    # - Country Name
-    # - Country Code
-    # - [Stuff I don't care about]
-    # - GDP for 1960
-    # - GDP for 1961
-    # - GDP for 1962
-    # - ...
-    # - GDP for 2022
-    #
-    # ...but I want this instead:
-    # - Country Name
-    # - Country Code
-    # - Year
-    # - GDP
-    #
-    # So let's pivot all those year-columns into two: Year and GDP
-    gdp_df = raw_gdp_df.melt(
-        ['Country Code'],
-        [str(x) for x in range(MIN_YEAR, MAX_YEAR + 1)],
-        'Year',
-        'GDP',
-    )
+with col_reg3:
+    st.markdown("*Uji Bisulfit*")
+    sakelar_bisulfit = st.toggle("Tambah NaHSO3", value=False) # Fixed typo: bisulfit
 
-    # Convert years from string to integers
-    gdp_df['Year'] = pd.to_numeric(gdp_df['Year'])
+st.markdown("---")
 
-    return gdp_df
+# --- MEJA PENGAMATAN (OUTPUT) ---
+st.markdown("### 🔍 Kondisi Fisik Tabung Reaksi")
 
-gdp_df = get_gdp_data()
+# Menghitung berapa banyak sakelar yang aktif
+sakelar_aktif = sum([sakelar_lakmus, sakelar_schiff, sakelar_bisulfit])
 
-# -----------------------------------------------------------------------------
-# Draw the actual page
+# Logika Penentuan Output
+if sakelar_aktif > 1:
+    # Proteksi jika pengguna menyalakan lebih dari satu reagen sekaligus
+    st.warning("⚠️ *Kontaminasi Reagen!* Harap hanya menyalakan satu sakelar reagen saja untuk menjaga akurasi analisis sampel misterius Anda.")
 
-# Set the title that appears at the top of the page.
-'''
-# :earth_americas: GDP dashboard
+elif sakelar_lakmus:
+    st.markdown("""
+        <div style='background-color: #FEE2E2; border-left: 8px solid #EF4444; padding: 20px; border-radius: 8px;'>
+            <h3 style='color: #991B1B; margin: 0;'>🔴 Tabung Bereaksi: WARNA MERAH</h3>
+            <p style='color: #7F1D1D; margin-top: 10px; font-size: 16px;'>
+                <b>Analisis Detektor:</b> Kertas lakmus biru langsung berubah menjadi merah! <br>
+                🎯 Fix, sampel ini adalah golongan <b>ASAM KARBOKSILAT (—COOH)</b> karena memiliki ion H+ bebas.
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
 
-Browse GDP data from the [World Bank Open Data](https://data.worldbank.org/) website. As you'll
-notice, the data only goes to 2022 right now, and datapoints for certain years are often missing.
-But it's otherwise a great (and did I mention _free_?) source of data.
-'''
+elif sakelar_schiff:
+    st.markdown("""
+        <div style='background-color: #FAE8FF; border-left: 8px solid #D946EF; padding: 20px; border-radius: 8px;'>
+            <h3 style='color: #86198F; margin: 0;'>🟣 Tabung Bereaksi: WARNA UNGU KEMERAHAN</h3>
+            <p style='color: #701A75; margin-top: 10px; font-size: 16px;'>
+                <b>Analisis Detektor:</b> Reagen Schiff kembali ke warna asalnya akibat gugus karbonil bebas.<br>
+                🎯 Fix, sampel ini adalah golongan <b>ALDEHID / ALKANAL (—CHO)</b>.
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
 
-# Add some spacing
-''
-''
+elif sakelar_bisulfit: # Fixed typo: bisulfit
+    st.markdown("""
+        <div style='background-color: #F8FAFC; border-left: 8px solid #64748B; padding: 20px; border-radius: 8px; border: 1px solid #CBD5E1;'>
+            <h3 style='color: #334155; margin: 0;'>⚪ Tabung Bereaksi: TERBENTUK KRISTAL PUTIH</h3>
+            <p style='color: #1E293B; margin-top: 10px; font-size: 16px;'>
+                <b>Analisis Detektor:</b> Terjadi reaksi adisi nukleofilik yang menghasilkan garam sukar larut.<br>
+                🎯 Fix, sampel ini adalah golongan <b>KETON / ALKANON (—CO—)</b>.
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
 
-min_value = gdp_df['Year'].min()
-max_value = gdp_df['Year'].max()
+else:
+    st.markdown("""
+        <div style='background-color: #F0F9FF; border-left: 8px solid #0EA5E9; padding: 20px; border-radius: 8px;'>
+            <h3 style='color: #075985; margin: 0;'>💧 Tabung Saat Ini: BENING & JERNIH</h3>
+            <p style='color: #0C4A6E; margin-top: 10px;'>
+                Belum ada reagen yang dimasukkan ke dalam sampel. Silakan klik/nyalakan salah satu <b>sakelar toggle</b> di atas untuk memulai reaksi kimia virtual!
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
 
-from_year, to_year = st.slider(
-    'Which years are you interested in?',
-    min_value=min_value,
-    max_value=max_value,
-    value=[min_value, max_value])
-
-countries = gdp_df['Country Code'].unique()
-
-if not len(countries):
-    st.warning("Select at least one country")
-
-selected_countries = st.multiselect(
-    'Which countries would you like to view?',
-    countries,
-    ['DEU', 'FRA', 'GBR', 'BRA', 'MEX', 'JPN'])
-
-''
-''
-''
-
-# Filter the data
-filtered_gdp_df = gdp_df[
-    (gdp_df['Country Code'].isin(selected_countries))
-    & (gdp_df['Year'] <= to_year)
-    & (from_year <= gdp_df['Year'])
-]
-
-st.header('GDP over time', divider='gray')
-
-''
-
-st.line_chart(
-    filtered_gdp_df,
-    x='Year',
-    y='GDP',
-    color='Country Code',
-)
-
-''
-''
-
-
-first_year = gdp_df[gdp_df['Year'] == from_year]
-last_year = gdp_df[gdp_df['Year'] == to_year]
-
-st.header(f'GDP in {to_year}', divider='gray')
-
-''
-
-cols = st.columns(4)
-
-for i, country in enumerate(selected_countries):
-    col = cols[i % len(cols)]
-
-    with col:
-        first_gdp = first_year[first_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
-        last_gdp = last_year[last_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
-
-        if math.isnan(first_gdp):
-            growth = 'n/a'
-            delta_color = 'off'
-        else:
-            growth = f'{last_gdp / first_gdp:,.2f}x'
-            delta_color = 'normal'
-
-        st.metric(
-            label=f'{country} GDP',
-            value=f'{last_gdp:,.0f}B',
-            delta=growth,
-            delta_color=delta_color
-        )
+st.write("")
+st.caption("✨ Kelebihan versi ini: Menggunakan komponen UI murni, dilengkapi sistem proteksi multi-reagen, dan bebas dari error crash.")
