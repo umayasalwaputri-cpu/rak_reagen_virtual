@@ -32,11 +32,17 @@ if not st.session_state["login_sukses"]:
             
             if tombol_login:
                 if username == USER_VALID and password == PASSWORD_VALID:
+                    # TENTUKAN STATUS LOGIN DULU
                     st.session_state["login_sukses"] = True
-                    st.success("🔑 Login berhasil! Membuka gerbang lab...")
+                    
+                    # 💥 TEMBAKKAN PETASAN DI SINI
+                    st.balloons()
+                    
+                    # LANGSUNG RE-RUN AGAR MASUK KE HALAMAN UTAMA BERSAMA PETASANNYA
                     st.rerun()
                 else:
                     st.error("❌ Username atau Password salah! Silakan periksa kembali.")
+❌ Username atau Password salah! Silakan periksa kembali.")
 
 # --- HALAMAN 2: APLIKASI UTAMA (Jika Sudah Login) ---
 else:
