@@ -16,15 +16,15 @@ col_reg1, col_reg2, col_reg3 = st.columns(3)
 
 with col_reg1:
     st.markdown("*Uji Lakmus*")
-    sakelar_lakmus = st.toggle("Celup Lakmus Biru", value=False)
+    sakelar_lakmus = st.toggle("Celup Lakmus Biru")
 
 with col_reg2:
     st.markdown("*Uji Schiff*")
-    sakelar_schiff = st.toggle("Tetes Reagen Schiff", value=False)
+    sakelar_schiff = st.toggle("Tetes Reagen Schiff")
 
 with col_reg3:
     st.markdown("*Uji Bisulfit*")
-    sakelar_bisulfit = st.toggle("Tambah NaHSO3", value=False) # Fixed typo: bisulfit
+    sakelar_bisulfit = st.toggle("Tambah NaHSO3")
 
 st.markdown("---")
 
@@ -36,8 +36,7 @@ sakelar_aktif = sum([sakelar_lakmus, sakelar_schiff, sakelar_bisulfit])
 
 # Logika Penentuan Output
 if sakelar_aktif > 1:
-    # Proteksi jika pengguna menyalakan lebih dari satu reagen sekaligus
-    st.warning("⚠️ *Kontaminasi Reagen!* Harap hanya menyalakan satu sakelar reagen saja untuk menjaga akurasi analisis sampel misterius Anda.")
+    st.warning("⚠️ *Kontaminasi Reagen!* Harap hanya menyalakan satu sakelar reagen saja untuk menjaga akurasi analisis sampel.")
 
 elif sakelar_lakmus:
     st.markdown("""
@@ -61,7 +60,7 @@ elif sakelar_schiff:
         </div>
     """, unsafe_allow_html=True)
 
-elif sakelar_bisulfit: # Fixed typo: bisulfit
+elif sakelar_bisulfit:
     st.markdown("""
         <div style='background-color: #F8FAFC; border-left: 8px solid #64748B; padding: 20px; border-radius: 8px; border: 1px solid #CBD5E1;'>
             <h3 style='color: #334155; margin: 0;'>⚪ Tabung Bereaksi: TERBENTUK KRISTAL PUTIH</h3>
@@ -83,4 +82,4 @@ else:
     """, unsafe_allow_html=True)
 
 st.write("")
-st.caption("✨ Kelebihan versi ini: Menggunakan komponen UI murni, dilengkapi sistem proteksi multi-reagen, dan bebas dari error crash.")
+st.caption("✨ Versi Stabil: Mendukung versi Streamlit cloud lama maupun baru.")
