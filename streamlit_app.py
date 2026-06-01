@@ -42,7 +42,6 @@ if not st.session_state["login_sukses"]:
                     st.rerun()
                 else:
                     st.error("❌ Username atau Password salah! Silakan periksa kembali.")
-❌ Username atau Password salah! Silakan periksa kembali.")
 
 # --- HALAMAN 2: APLIKASI UTAMA (Jika Sudah Login) ---
 else:
