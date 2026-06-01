@@ -223,7 +223,7 @@ else:
                     elif tahap_3_gol4 == "Berupa Filtrat (Ca2+)":
                         st.write("➡️ Tambahkan $H_2C_2O_4$ dan $NH_4OH$")
                         st.success("✨ Terbentuk endapan $CaC_2O_4$ putih. Kation: *Kalsium ($Ca^{2+}$)*")
-                        nama_reagen, kes原理 = "Filtrat -> K2CrO4 Filtrat -> H2C2O4 + NH4OH", "Kation Kalsium (Ca²⁺)"
+                        nama_reagen, kesimpulan_gugus = "Filtrat -> K2CrO4 Filtrat -> H2C2O4 + NH4OH", "Kation Kalsium (Ca²⁺)"
 
         # 2. UJI ANION
         elif jenis_analisis == "Uji Anion (Non-Logam)":
@@ -248,7 +248,7 @@ else:
                     nama_reagen, kesimpulan_gugus = "AgNO3", "Anion Bromida (Br⁻)"
                 elif hasil_agno3 == "Kuning Terang":
                     st.success("✨ Anion Teridentifikasi: *Iodida ($I^-$)*")
-                    nama_reagen, kesimpulan_gugus = "AgNO3", "Anion Iodida (I⁻)"
+                    nama_reagen, kes原理 = "AgNO3", "Anion Iodida (I⁻)"
             elif reagen_anion == "FeSO4 + H2SO4 pekat (Uji Cincin Cokelat)":
                 st.write("Hasil: Terbentuk cincin berwarna cokelat di antara dua lapisan cairan.")
                 st.success("✨ Anion Teridentifikasi: *Nitrat ($NO_3^-$)*")
@@ -409,25 +409,46 @@ else:
 
         with col_yt:
             st.markdown("### 📺 Video Demonstrasi Laboratorium")
-            st.markdown("Silakan pilih topik video praktikum virtual yang ingin Anda tonton langsung di bawah ini:")
+            st.markdown("Silakan pilih kategori materi video yang ingin Anda tonton langsung di bawah ini:")
             
-            pilihan_video = st.selectbox(
-                "Pilih Materi Video:",
-                ["Uji Kation Golongan I (Vogel)", "Uji Gugus Fungsi Organik (Aldehid & Keton)", "Sistem Keselamatan Kerja Lab (K3)"]
+            pilihan_kategori = st.selectbox(
+                "Pilih Kategori Utama:",
+                ["Uji Gugus Fungsi Organik", "Uji Kation Golongan 1", "Sistem Keselamatan Kerja K3"]
             )
 
-            # Menampilkan player YouTube asli berdasarkan pilihan user
-            if pilihan_video == "Uji Kation Golongan I (Vogel)":
-                st.caption("🎥 Demonstrasi Reaksi Pengendapan Perak ($Ag^+$), Timbal ($Pb^{2+}$), & Merkuri ($Hg_2^{2+}$)")
-                st.video("https://www.youtube.com/watch?v=ExmS1u_Fw8Y")
+            # SUB-KATEGORI 1: GUGUS FUNGSI ORGANIK (3 VIDEO)
+            if pilihan_kategori == "Uji Gugus Fungsi Organik":
+                video_organik = st.radio(
+                    "Pilih Materi Video Organik:",
+                    ["Video 1: Tes Gugus Fungsi Utama", "Video 2: Uji Identifikasi Senyawa Organik", "Video 3: Analisis Reaksi Gugus Fungsi"]
+                )
+                if video_organik == "Video 1: Tes Gugus Fungsi Utama":
+                    st.caption("🎥 Hubungan Struktur Senyawa & Identifikasi Reaksi Kimia")
+                    st.video("https://youtu.be/dPXgUFDqSik?si=kfE5aOt1sdj5MNNm")
+                elif video_organik == "Video 2: Uji Identifikasi Senyawa Organik":
+                    st.caption("🎥 Prosedur Praktikum dan Perubahan Warna Indikator")
+                    st.video("https://youtu.be/2g8eB2FEHcA?si=K4XTS-4Swp1pJL3d")
+                elif video_organik == "Video 3: Analisis Reaksi Gugus Fungsi":
+                    st.caption("🎥 Karakteristik Sifat Fisika & Kimia Larutan Sampel")
+                    st.video("https://youtu.be/naS7RTSkmLE?si=gpiOW4oV0Qdcpmw-")
                 
-            elif pilihan_video == "Uji Gugus Fungsi Organik (Aldehid & Keton)":
-                st.caption("🎥 Perbandingan Hasil Uji Reagen Schiff, Fehling, dan Tollens pada Senyawa Karbonil")
-                st.video("https://www.youtube.com/watch?v=mID47oFvXoo")
+            # SUB-KATEGORI 2: KATION GOLONGAN 1 (2 VIDEO)
+            elif pilihan_kategori == "Uji Kation Golongan 1":
+                video_kation = st.radio(
+                    "Pilih Materi Video Kation:",
+                    ["Video 1: Skema Pengendapan Kation Gol I", "Video 2: Konfirmasi Reaksi Timbal, Perak & Merkuri"]
+                )
+                if video_kation == "Video 1: Skema Pengendapan Kation Gol I":
+                    st.caption("🎥 Pemisahan Analisis Kualitatif Kation Menggunakan Reagen HCl")
+                    st.video("https://youtu.be/dAygxePSXHg?si=MfmebJCooq7u_In6")
+                elif video_kation == "Video 2: Konfirmasi Reaksi Timbal, Perak & Merkuri":
+                    st.caption("🎥 Reaksi Spesifik Pembentukan Kompleks Warna Larutan Kation")
+                    st.video("https://youtu.be/W7IKGhpKkEk?si=tJ9AUEx8qYhOZamP")
                 
-            elif pilihan_video == "Sistem Keselamatan Kerja Lab (K3)":
+            # SUB-KATEGORI 3: K3 LABORATORIUM (1 VIDEO)
+            elif pilihan_kategori == "Sistem Keselamatan Kerja K3":
                 st.caption("🎥 Prosedur Penanganan Hazard, Penggunaan APD, dan Budaya 5S/Kaizen di Lab Industri")
-                st.video("https://www.youtube.com/watch?v=BRDApYgvDqQ")
+                st.video("https://youtu.be/BRDApYgvDqQ?si=PUf8bBVqXsMvrJ-e")
 
     # ================= KONDISI E: TAMPILAN LOGBOOK DATA =================
     elif pilihan_halaman == "📋 Logbook Pengujian":
