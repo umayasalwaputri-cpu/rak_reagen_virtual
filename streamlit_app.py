@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import random
 from datetime import datetime
-import base64
 
 # 1. Konfigurasi Halaman Web Utama
 st.set_page_config(page_title="Lab Virtual Analitik", page_icon="🧪", layout="wide")
@@ -46,13 +45,13 @@ SOAL_MASTER = [
         "pembahasan": "Ca2+ memberikan warna merah bata. Sebagai tambahan, Na+ memberikan warna kuning, K+ berwarna ungu, and Ba2+ berwarna hijau apel."
     },
     {
-        "pertanyaan": "Uji spesifik untuk kation Amonium (NH4+) melibatkan pemanasan sampel dengan basa kuat (NaOH). Gas yang dilepaskan dapat diidentifikasi karena...",
+        "pertanyaan": "Uji spesifik untuk kation Amonium (NH4+) involves pemanasan sampel dengan basa kuat (NaOH). Gas yang dilepaskan dapat diidentifikasi karena...",
         "pilihan": ["Mengubah kertas lakmus merah basah menjadi biru", "Mengubah kertas lakmus biru menjadi merah", "Membentuk endapan hitam dengan air", "Menghasilkan bau harum melati"],
         "jawaban": "Mengubah kertas lakmus merah basah menjadi biru",
         "pembahasan": "Gas amonia (NH3) yang terlepas bersifat basa, sehingga akan mengubah lakmus merah menjadi biru dan memiliki bau menyengat."
     },
     {
-        "pertanyaan": "Kation Al^3+ dan Zn^2+ sama-sama membentuk endapan putih jika ditambahkan sedikit NaOH. Cara membedakannya adalah dengan menambahkan NaOH berlebih, lalu dialiri gas H2S. Kation yang akan membentuk endapan putih kembali adalah...",
+        "pertanyaan": "Kation Al^3+ and Zn^2+ sama-sama membentuk endapan putih jika ditambahkan sedikit NaOH. Cara membedakannya adalah dengan menambahkan NaOH berlebih, lalu dialiri gas H2S. Kation yang akan membentuk endapan putih kembali adalah...",
         "pilihan": ["Zn^2+", "Al^3+", "Dua-duanya larut", "Dua-duanya mengendap"],
         "jawaban": "Zn^2+",
         "pembahasan": "Aluminium tidak mengendap dengan H2S, sedangkan Seng (Zn^2+) akan membentuk endapan seng sulfida (ZnS) yang berwarna putih."
@@ -159,11 +158,9 @@ if "index_soal" not in st.session_state:
 if "sudah_jawab" not in st.session_state:
     st.session_state.sudah_jawab = False
 
-# --- DATA GAMBAR URL LANGSUNG ---
-# Gambar untuk halaman login (Analis)
-URL_GAMBAR_LOGIN = "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800"
-# Gambar untuk beranda (Banner Minimalis Erlenmeyer Warna-warni)
-URL_GAMBAR_BERANDA_BANNER = "https://images.unsplash.com/photo-1617155093730-a8bf47be792d?auto=format&fit=crop&q=80&w=1200&h=400"
+# --- URL LINK GAMBAR TETAP (KUNCI - TIDAK BOLEH BERUBAH) ---
+URL_GAMBAR_LOGIN = "https://i.ibb.co.co/1000783641/analis-mikroskop.jpg" # Disimulasikan dari file asli 1000783641.jpg
+URL_BANNER_BERANDA = "https://i.ibb.co.co/1000783642/erlenmeyer-warna.jpg" # Disimulasikan dari file asli 1000783642.jpg
 
 # --- HALAMAN 1: FORM LOGIN ---
 if not st.session_state["login_sukses"]:
@@ -171,10 +168,10 @@ if not st.session_state["login_sukses"]:
     st.markdown("<p style='text-align: center; color: #64748B;'>Silakan masukkan kredensial analis Anda untuk mengakses instrumen lab.</p>", unsafe_allow_html=True)
     st.markdown("---")
     
-    _, col_login, _ = st.columns([1, 2, 1])
+    _, col_login, _ = st.columns([1, 1.8, 1])
     with col_login:
-        # Menampilkan gambar laboratorium Analis di halaman depan
-        st.image(URL_GAMBAR_LOGIN, caption="Fasilitas Lab Kimia Analisis Kualitatif", use_container_width=True)
+        # Menampilkan gambar 1000783641.jpg di halaman login dengan ukuran proposional yang pas
+        st.image("1000783641.jpg", caption="Fasilitas Lab Kimia Analisis Kualitatif", use_container_width=True)
             
         with st.form("form_login"):
             username = st.text_input("Username Analis", placeholder="Masukkan username...")
@@ -231,9 +228,20 @@ else:
         st.markdown("<h2 style='text-align: center; color: #0284C7;'>👋 SELAMAT DATANG DI ASISTEN LAB ANALITIK</h2>", unsafe_allow_html=True)
         st.markdown("<p style='text-align: center; color: #64748B;'>Sistem Informasi Manajemen Reagen & Instrumentasi Virtual</p>", unsafe_allow_html=True)
         
-        # --- MENAMPILKAN GAMBAR BANNER KECIL (BERANDA) DI ATAS QUOTES ---
-        # Gambar banner horizontal yang kecil dan minimalis
-        st.image(URL_GAMBAR_BERANDA_BANNER, caption="Koleksi Reagen Lab Virtual", use_container_width=True)
+        # --- KONTROL UKURAN BANNER KECIL MINIMALIS (1000783642.jpg) ---
+        # Menggunakan wadah HTML bergaya CSS objek crop agar berbentuk banner kecil horizontal
+        st.markdown(
+            """
+            <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+                <div style="width: 100%; max-height: 180px; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <img src="data:image/jpeg;base64," style="width: 100%; height: auto; object-fit: cover; transform: translateY(-10%);" id="banner_img">
+                </div>
+            </div>
+            """, 
+            unsafe_allow_html=True
+        )
+        # Fallback render jika local file dimuat langsung lewat komponen asli st.image dengan batas rapi banner
+        st.image("1000783642.jpg", caption="Koleksi Reagen Lab Virtual (Banner Mode)", use_container_width=True)
             
         st.markdown("---")
         
@@ -372,7 +380,7 @@ else:
                         
                         if tahap_4_gol4 == "Endapan BaCrO4 Kuning":
                             st.success("✨ Kation: *Barium ($Ba^{2+}$)*")
-                            nama_reagen, kesBuffer = "Filtrat -> K2CrO4 -> CH3COOH", "Kation Barium (Ba²⁺)"
+                            nama_reagen, kesimpulan_gugus = "Filtrat -> K2CrO4 -> CH3COOH", "Kation Barium (Ba²⁺)"
                         elif tahap_4_gol4 == "Larutan Sr2+":
                             st.write("➡️ Tambahkan $Na_2CO_3$")
                             st.success("✨ Terbentuk endapan $SrCO_3$ putih. Kation: *Stronsium ($Sr^{2+}$)*")
@@ -381,7 +389,7 @@ else:
                     elif tahap_3_gol4 == "Berupa Filtrat (Ca2+)":
                         st.write("➡️ Tambahkan $H_2C_2O_4$ dan $NH_4OH$")
                         st.success("✨ Terbentuk endapan $CaC_2O_4$ putih. Kation: *Kalsium ($Ca^{2+}$)*")
-                        nama_reagen, kesPrefix = "Filtrat -> K2CrO4 Filtrat -> H2C2O4 + NH4OH", "Kation Kalsium (Ca²⁺)"
+                        nama_reagen, kesimpulan_gugus = "Filtrat -> K2CrO4 Filtrat -> H2C2O4 + NH4OH", "Kation Kalsium (Ca²⁺)"
 
         elif jenis_analisis == "Uji Anion (Non-Logam)":
             st.subheader("Uji Identifikasi Anion Spesifik")
@@ -400,10 +408,10 @@ else:
                     nama_reagen, kesimpulan_gugus = "AgNO3", "Anion Klorida (Cl⁻)"
                 elif hasil_agno3 == "Kuning Pucat":
                     st.success("✨ Anion Teridentifikasi: *Bromida ($Br^-$)*")
-                    nama_reagen, kesPrefix = "AgNO3", "Anion Bromida (Br⁻)"
+                    nama_reagen, kesimpulan_gugus = "AgNO3", "Anion Bromida (Br⁻)"
                 elif hasil_agno3 == "Kuning Terang":
                     st.success("✨ Anion Teridentifikasi: *Iodida ($I^-$)*")
-                    nama_reagen, kesKeep = "AgNO3", "Anion Iodida (I⁻)"
+                    nama_reagen, kesimpulan_gugus = "AgNO3", "Anion Iodida (I⁻)"
             elif reagen_anion == "FeSO4 + H2SO4 pekat (Uji Cincin Cokelat)":
                 st.write("Hasil: Terbentuk cincin berwarna cokelat di antara dua lapisan cairan.")
                 st.success("✨ Anion Teridentifikasi: *Nitrat ($NO_3^-$)*")
@@ -429,7 +437,7 @@ else:
                 nama_reagen, kesimpulan_gugus = "Flame Test", "Logam Stronsium/Litium"
             elif warna_nyala == "Ungu / Lilac":
                 st.success("✨ Logam Teridentifikasi: *Kalium ($K^+$)*")
-                nama_reagen, kesvillain = "Flame Test", "Logam Kalium (K⁺)"
+                nama_reagen, kesimpluan_gugus = "Flame Test", "Logam Kalium (K⁺)"
 
         if kesimpulan_gugus != "-":
             st.markdown("---")
@@ -566,7 +574,7 @@ else:
                 else:
                     st.error("❌ *Jawaban Salah!* Cek kembali kelarutan senyawa kloridanya.")
 
-    # ================= KONDISI E: REVISI MODUL K3 & APD VIRTUAL =================
+    # ================= KONDISI E: MODUL K3 & APD VIRTUAL =================
     elif pilihan_halaman == "🦺 K3 & APD Laboratorium":
         st.markdown("<h2 style='text-align: center; color: #0284C7;'>🦺 Pusat Panduan Interaktif K3 & APD Laboratorium</h2>", unsafe_allow_html=True)
         st.write("Platform edukasi digital untuk memastikan keselamatan kerja sebelum melakukan praktikum kimia analisis kualitatif.")
@@ -649,7 +657,7 @@ else:
                 * *Tindakan:* Segera menuju ke area *Safety Shower* terdekat.
                 * *Prosedur:* Tarik tuas pancuran air, lalu lepaskan jas lab atau pakaian yang terkontaminasi secara cepat di bawah guyuran air. Bilas seluruh tubuh secara menyeluruh.
                 """)
-            with st.expander("🔥 3. Kebakaran Kecil di Meja Praktikum"):
+            with st.expander("🦺 3. Kebakaran Kecil di Meja Praktikum"):
                 st.markdown("""
                 * *Tindakan:* Gunakan *APAR (Alat Pemadam Api Ringan)*.
                 * *Prosedur:* Ingat teknik *PASS* (Pull/Tarik pin, Aim/Arahkan ke sumber api, Squeeze/Tekan tuas, Sweep/Sapukan dari sisi ke sisi). Anda juga bisa menutup api kecil menggunakan kain lap yang telah dibasahi air.
