@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import random
 from datetime import datetime
+from PIL import Image  # Ditambahkan untuk membaca gambar dengan aman
 
 # 1. Konfigurasi Halaman Web Utama
 st.set_page_config(page_title="Lab Virtual Analitik", page_icon="🧪", layout="wide")
@@ -42,16 +43,16 @@ SOAL_MASTER = [
         "pertanyaan": "Uji nyala (flame test) untuk kation Kalsium (Ca^2+) memberikan warna nyala yang khas, yaitu...",
         "pilihan": ["Merah bata", "Kuning", "Ungu", "Hijau"],
         "jawaban": "Merah bata",
-        "pembahasan": "Ca2+ memberikan warna merah bata. Sebagai tambahan, Na+ memberikan warna kuning, K+ berwarna ungu, and Ba2+ berwarna hijau apel."
+        "pembahasan": "Ca2+ memberikan warna merah bata. Sebagai tambahan, Na+ memberikan warna kuning, K+ berwarna ungu, dan Ba2+ berwarna hijau apel."
     },
     {
-        "pertanyaan": "Uji spesifik untuk kation Amonium (NH4+) involves pemanasan sampel dengan basa kuat (NaOH). Gas yang dilepaskan dapat diidentifikasi karena...",
+        "pertanyaan": "Uji spesifik untuk kation Amonium (NH4+) melibatkan pemenasan sampel dengan basa kuat (NaOH). Gas yang dilepaskan dapat diidentifikasi karena...",
         "pilihan": ["Mengubah kertas lakmus merah basah menjadi biru", "Mengubah kertas lakmus biru menjadi merah", "Membentuk endapan hitam dengan air", "Menghasilkan bau harum melati"],
         "jawaban": "Mengubah kertas lakmus merah basah menjadi biru",
         "pembahasan": "Gas amonia (NH3) yang terlepas bersifat basa, sehingga akan mengubah lakmus merah menjadi biru dan memiliki bau menyengat."
     },
     {
-        "pertanyaan": "Kation Al^3+ and Zn^2+ sama-sama membentuk endapan putih jika ditambahkan sedikit NaOH. Cara membedakannya adalah dengan menambahkan NaOH berlebih, lalu dialiri gas H2S. Kation yang akan membentuk endapan putih kembali adalah...",
+        "pertanyaan": "Kation Al^3+ dan Zn^2+ sama-sama membentuk endapan putih jika ditambahkan sedikit NaOH. Cara membedakannya adalah dengan menambahkan NaOH berlebih, lalu dialiri gas H2S. Kation yang akan membentuk endapan putih kembali adalah...",
         "pilihan": ["Zn^2+", "Al^3+", "Dua-duanya larut", "Dua-duanya mengendap"],
         "jawaban": "Zn^2+",
         "pembahasan": "Aluminium tidak mengendap dengan H2S, sedangkan Seng (Zn^2+) akan membentuk endapan seng sulfida (ZnS) yang berwarna putih."
@@ -87,13 +88,13 @@ SOAL_MASTER = [
         "pembahasan": "Ion Ba^2+ akan berikatan dengan SO4^2- membentuk endapan putih Barium Sulfat (BaSO4) yang sangat stabil dan tidak larut dalam asam encer."
     },
     {
-        "pertanyaan": "Uji cincin cokelat (brown ring test) yang menggunakan FeSO4 and H2SO4 pekat digunakan untuk mengidentifikasi anion...",
+        "pertanyaan": "Uji cincin cokelat (brown ring test) yang menggunakan FeSO4 dan H2SO4 pekat digunakan untuk mengidentifikasi anion...",
         "pilihan": ["Nitrat (NO3-)", "Klorida (Cl-)", "Bromida (Br-)", "Fosfat (PO4^3-)"],
         "jawaban": "Nitrat (NO3-)",
         "pembahasan": "Cincin cokelat terbentuk akibat adanya kompleks [Fe(H2O)5(NO)]^2+ pada batas kedua cairan, menandakan adanya ion nitrat."
     },
     {
-        "pertanyaan": "Anion Halida yang memberikan endapan kuning muda (pale yellow) dengan AgNO3 and endapan tersebut sukar larut dalam amonia encer adalah...",
+        "pertanyaan": "Anion Halida yang memberikan endapan kuning muda (pale yellow) dengan AgNO3 dan endapan tersebut sukar larut dalam amonia encer adalah...",
         "pilihan": ["Bromida (Br-)", "Klorida (Cl-)", "Iodida (I-)", "Fluorida (F-)"],
         "jawaban": "Bromida (Br-)",
         "pembahasan": "AgCl (putih, mudah larut amonia), AgBr (kuning muda, sukar larut), AgI (kuning kuat, tidak larut amonia)."
@@ -126,7 +127,7 @@ SOAL_MASTER = [
         "pertanyaan": "Larutan AgNO3 jika ditambahkan ke dalam larutan yang mengandung anion Iodida (I-) akan menghasilkan endapan berwarna...",
         "pilihan": ["Kuning", "Putih", "Hitam", "Merah bata"],
         "jawaban": "Kuning",
-        "pembahasan": "Reaksi menghasilkan endapan Perak Iodida (AgI) yang berwarna kuning cerah and tidak larut dalam larutan amonia."
+        "pembahasan": "Reaksi menghasilkan endapan Perak Iodida (AgI) yang berwarna kuning cerah dan tidak larut dalam larutan amonia."
     },
     {
         "pertanyaan": "Anion manakah di bawah ini yang tidak menghasilkan endapan dengan larutan AgNO3 maupun BaCl2 dalam suasana netral?",
@@ -158,9 +159,6 @@ if "index_soal" not in st.session_state:
 if "sudah_jawab" not in st.session_state:
     st.session_state.sudah_jawab = False
 
-# --- URL LINK GAMBAR TETAP (KUNCI - TIDAK BOLEH BERUBAH) ---
-URL_GAMBAR_LOGIN = "https://i.ibb.co.co/1000783641/analis-mikroskop.jpg" # Disimulasikan dari file asli 1000783641.jpg
-URL_BANNER_BERANDA = "https://i.ibb.co.co/1000783642/erlenmeyer-warna.jpg" # Disimulasikan dari file asli 1000783642.jpg
 
 # --- HALAMAN 1: FORM LOGIN ---
 if not st.session_state["login_sukses"]:
@@ -170,8 +168,12 @@ if not st.session_state["login_sukses"]:
     
     _, col_login, _ = st.columns([1, 1.8, 1])
     with col_login:
-        # Menampilkan gambar 1000783641.jpg di halaman login dengan ukuran proposional yang pas
-        st.image("1000783641.jpg", caption="Fasilitas Lab Kimia Analisis Kualitatif", use_container_width=True)
+        # Pengecekan Aman Gambar Login
+        try:
+            img_login = Image.open("1000783641.jpg")
+            st.image(img_login, caption="Fasilitas Lab Kimia Analisis Kualitatif", use_container_width=True)
+        except Exception:
+            st.warning("⚠️ Gambar '1000783641.jpg' tidak ditemukan di folder script.")
             
         with st.form("form_login"):
             username = st.text_input("Username Analis", placeholder="Masukkan username...")
@@ -228,20 +230,12 @@ else:
         st.markdown("<h2 style='text-align: center; color: #0284C7;'>👋 SELAMAT DATANG DI ASISTEN LAB ANALITIK</h2>", unsafe_allow_html=True)
         st.markdown("<p style='text-align: center; color: #64748B;'>Sistem Informasi Manajemen Reagen & Instrumentasi Virtual</p>", unsafe_allow_html=True)
         
-        # --- KONTROL UKURAN BANNER KECIL MINIMALIS (1000783642.jpg) ---
-        # Menggunakan wadah HTML bergaya CSS objek crop agar berbentuk banner kecil horizontal
-        st.markdown(
-            """
-            <div style="display: flex; justify-content: center; margin-bottom: 20px;">
-                <div style="width: 100%; max-height: 180px; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                    <img src="data:image/jpeg;base64," style="width: 100%; height: auto; object-fit: cover; transform: translateY(-10%);" id="banner_img">
-                </div>
-            </div>
-            """, 
-            unsafe_allow_html=True
-        )
-        # Fallback render jika local file dimuat langsung lewat komponen asli st.image dengan batas rapi banner
-        st.image("1000783642.jpg", caption="Koleksi Reagen Lab Virtual (Banner Mode)", use_container_width=True)
+        # Pengecekan Aman Gambar Beranda (Banner Mode)
+        try:
+            img_banner = Image.open("1000783642.jpg")
+            st.image(img_banner, caption="Koleksi Reagen Lab Virtual", use_container_width=True)
+        except Exception:
+            st.warning("⚠️ Gambar '1000783642.jpg' tidak ditemukan di folder script.")
             
         st.markdown("---")
         
@@ -405,7 +399,7 @@ else:
                 hasil_agno3 = st.radio("Warna endapan yang terbentuk:", ["Putih", "Kuning Pucat", "Kuning Terang"], index=None)
                 if hasil_agno3 == "Putih":
                     st.success("✨ Anion Teridentifikasi: *Klorida ($Cl^-$)*")
-                    nama_reagen, kesimpulan_gugus = "AgNO3", "Anion Klorida (Cl⁻)"
+                    nama_reagen, kesimilar_gugus = "AgNO3", "Anion Klorida (Cl⁻)"
                 elif hasil_agno3 == "Kuning Pucat":
                     st.success("✨ Anion Teridentifikasi: *Bromida ($Br^-$)*")
                     nama_reagen, kesimpulan_gugus = "AgNO3", "Anion Bromida (Br⁻)"
@@ -437,7 +431,7 @@ else:
                 nama_reagen, kesimpulan_gugus = "Flame Test", "Logam Stronsium/Litium"
             elif warna_nyala == "Ungu / Lilac":
                 st.success("✨ Logam Teridentifikasi: *Kalium ($K^+$)*")
-                nama_reagen, kesimpluan_gugus = "Flame Test", "Logam Kalium (K⁺)"
+                nama_reagen, kesimpulan_gugus = "Flame Test", "Logam Kalium (K⁺)"
 
         if kesimpulan_gugus != "-":
             st.markdown("---")
@@ -646,7 +640,7 @@ else:
         with tab_darurat:
             st.header("🚨 Prosedur Tanggap Darurat Laboratorium")
             st.write("Jika terjadi kecelakaan kerja, lakukan tindakan pertolongan pertama berikut secara tenang namun cepat:")
-            with st.expander("👁️ 1. Kontaminasi Bahan chemical pada Mata"):
+            with st.expander("👁️ 1. Kontaminasi Bahan Kimia pada Mata"):
                 st.markdown("""
                 * *Tindakan:* Segera bawa korban ke *Eye Wash Station*.
                 * *Prosedur:* Bilas mata dengan air mengalir bersih selama minimal 15-20 menit dengan posisi kelopak mata dipaksa terbuka. 
@@ -718,7 +712,7 @@ else:
             st.markdown("---")
             if skor_akhir == 100: st.subheader("🥇 Luar Biasa! Anda Master Kimia Analisis Kualitatif!")
             elif skor_akhir >= 75: st.subheader("🥈 Kinerja Sangat Baik! Pemahaman Anda sudah sangat kuat.")
-            else: st.subheader("📚 Semangat! Terus pelajari tabel kation-anion untuk memperkuat hapalan.")
+            else: st.subheader("📚 Semangat! Terus pelajari tabel kation-anion untuk memperkuat hafalan.")
             
             if st.button("Ulangi Kuis (Soal akan Diacak Lagi) 🔄", use_container_width=True):
                 st.session_state.skor = 0
