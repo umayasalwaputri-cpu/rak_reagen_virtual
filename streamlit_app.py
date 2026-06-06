@@ -167,13 +167,19 @@ if not st.session_state["login_sukses"]:
     
     _, col_login, _ = st.columns([1, 1.8, 1])
     with col_login:
-        # PENGGANTI GAMBAR: Animasi Interaktif Lottie (Tabung Reaksi Kimia)
-        st.markdown('<iframe src="https://lottie.host/embed/8b512fd5-7bb8-4f16-bb70-74676878b30d/6C5fXJ6Eby.json" style="width: 100%; height: 280px; border: none; margin-bottom: 10px;"></iframe>', unsafe_allow_html=True)
+        # PENGGANTI GAMBAR: Container Teks Informatif Estetik K3
+        st.markdown("""
+            <div style='background-color: #F8FAFC; border: 2px dashed #0284C7; padding: 25px; border-radius: 10px; text-align: center; margin-bottom: 25px;'>
+                <span style='font-size: 55px;'>🔬</span>
+                <h4 style='color: #0284C7; margin-top: 10px; margin-bottom: 5px;'>SISTEM VALIDASI LABORATORIUM</h4>
+                <p style='color: #64748B; font-size: 13px; margin: 0;'>Pastikan menggunakan APD lengkap sesuai regulasi SMK3L sebelum masuk.</p>
+            </div>
+        """, unsafe_allow_html=True)
             
         with st.form("form_login"):
             username = st.text_input("Username Analis", placeholder="Masukkan username...")
             password = st.text_input("Password", type="password", placeholder="Masukkan password...")
-            tombol_login = st.form_submit_button("Masuk ke Laboratorium")
+            tombol_login = st.form_submit_button("Masuk ke Laboratorium ➡️")
             
             if tombol_login:
                 if username == USER_VALID and password == PASSWORD_VALID:
@@ -225,9 +231,15 @@ else:
         st.markdown("<h2 style='text-align: center; color: #0284C7;'>👋 SELAMAT DATANG DI ASISTEN LAB ANALITIK</h2>", unsafe_allow_html=True)
         st.markdown("<p style='text-align: center; color: #64748B;'>Sistem Informasi Manajemen Reagen & Instrumentasi Virtual</p>", unsafe_allow_html=True)
         
-        # PENGGANTI BANNER: Animasi Interaktif Lottie (Ilmuwan di Lab)
-        st.markdown('<iframe src="https://lottie.host/embed/9303d7c4-06d2-4464-ba83-5a4ddcf38bb0/b43bSPlEKK.json" style="width: 100%; height: 320px; border: none; margin-bottom: 15px;"></iframe>', unsafe_allow_html=True)
-            
+        # PENGGANTI BANNER: Header Box berbasis warna Biru K3 Industri
+        st.markdown("""
+            <div style='background-color: #F0F9FF; border-left: 8px solid #0284C7; padding: 25px; border-radius: 8px; text-align: center; margin-bottom: 25px;'>
+                <span style='font-size: 60px;'>🧪 ⚙️ 🛡️</span>
+                <h3 style='color: #0369A1; margin-top: 10px; margin-bottom: 5px;'>VIRTUAL LABORATORY DASHBOARD</h3>
+                <p style='color: #0284C7; font-weight: bold; margin: 0;'>Modul Analisis Reaksi Kualitatif & Keselamatan Kerja Terintegrasi</p>
+            </div>
+        """, unsafe_allow_html=True)
+        
         st.markdown("---")
         
         # Kotak Quotes Motivasi
@@ -347,7 +359,7 @@ else:
                     if tahap_3_gol3 == "Endapan Fe(OH)3 (Tidak larut)":
                         st.write("➡️ Tambahkan $HNO_3$ (menjadi $Fe^{3+}$), lalu tambahkan $SCN^-$")
                         st.success("✨ Terbentuk kompleks $Fe(SCN)_3$ merah. Kation: *Besi(III) ($Fe^{3+}$)*")
-                        nama_reagen, kesiaxial_gugus = "HCl Filtrat -> NH4OH -> NaOH -> HNO3 + SCN-", "Kation Besi(III) (Fe³⁺)"
+                        nama_reagen, kesimpulan_gugus = "HCl Filtrat -> NH4OH -> NaOH -> HNO3 + SCN-", "Kation Besi(III) (Fe³⁺)"
                     elif tahap_3_gol3 == "Larutan Al(OH)4- (Larut)":
                         st.write("➡️ Tambahkan $HCl$ lalu $Na_2CO_3$")
                         st.success("✨ Terbentuk endapan $Al(OH)_3$ putih. Kation: *Aluminium ($Al^{3+}$)*")
@@ -779,4 +791,14 @@ else:
         st.markdown("<p style='text-align: center; color: #64748B;'>Daftar riwayat rekaman pengujian & evaluasi target belajar</p>", unsafe_allow_html=True)
         st.markdown("---")
         
-        st.info(f"🎯 *Fokus Kompetensi Hari Ini:* {
+        st.info(f"🎯 *Fokus Kompetensi Hari Ini:* {st.session_state['target_belajar']}")
+        
+        if len(st.session_state["logbook_data"]) > 0:
+            df_log = pd.DataFrame(st.session_state["logbook_data"])
+            st.dataframe(df_log, use_container_width=True)
+            
+            if st.button("🗑️ Bersihkan Semua Log"):
+                st.session_state["logbook_data"] = []
+                st.rerun()
+        else:
+            st.warning("Belum ada riwayat praktikum yang tersimpan. Silakan tentukan target belajar Anda di Beranda, lalu lakukan pengujian di area menu Ion atau Organik.")
