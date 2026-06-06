@@ -4,7 +4,7 @@ import random
 from datetime import datetime
 
 # 1. Konfigurasi Halaman Web Utama
-st.set_page_config(page_title="Lab-Analitika: Dashboard Virtual", page_icon="🧪", layout="wide")
+st.set_page_config(page_title="Lab Virtual Analitik", page_icon="🧪", layout="wide")
 
 # --- DATABASE USER ---
 USER_VALID = "admin_lab"
@@ -87,7 +87,7 @@ SOAL_MASTER = [
         "pembahasan": "Ion Ba^2+ akan berikatan dengan SO4^2- membentuk endapan putih Barium Sulfat (BaSO4) yang sangat stabil dan tidak larut dalam asam encer."
     },
     {
-        "pertanyaan": "Uji cincin cokelat (brown ring test) yang menggunakan FeSO4 dan H2SO4 pekat digunakan untuk mengidentifikasi anion...",
+        "pertanyaan": "Uji cincin cokelat (brown ring test) yang menggunakan FeSO4 and H2SO4 pekat digunakan untuk mengidentifikasi anion...",
         "pilihan": ["Nitrat (NO3-)", "Klorida (Cl-)", "Bromida (Br-)", "Fosfat (PO4^3-)"],
         "jawaban": "Nitrat (NO3-)",
         "pembahasan": "Cincin cokelat terbentuk akibat adanya kompleks [Fe(H2O)5(NO)]^2+ pada batas kedua cairan, menandakan adanya ion nitrat."
@@ -99,7 +99,7 @@ SOAL_MASTER = [
         "pembahasan": "AgCl (putih, mudah larut amonia), AgBr (kuning muda, sukar larut), AgI (kuning kuat, tidak larut amonia)."
     },
     {
-        "pertanyaan": "Jika sampel yang mengandung anion S^2- (Sulfida) ditambahkan asam kuat, akan tercium bau khas seperti...",
+        "pertanyaan": "Bagaimanakah bau gas H2S (Hidrogen Sulfida) yang khas ketika sampel mengandung anion S^2- ditambahkan asam kuat?",
         "pilihan": ["Telur busuk", "Cuka", "Buah busuk", "Amonia menyengat"],
         "jawaban": "Telur busuk",
         "pembahasan": "Asam akan mendesak sulfida membentuk gas H2S (Hidrogen Sulfida) yang terkenal memiliki bau menyengat seperti telur busuk."
@@ -136,7 +136,7 @@ SOAL_MASTER = [
     }
 ]
 
-# Inisialisasi Session State Global
+# --- INISIALISASI SESSION STATE ---
 if "login_sukses" not in st.session_state:
     st.session_state["login_sukses"] = False
 if "logbook_data" not in st.session_state:
@@ -148,7 +148,7 @@ if "pemicu_petasan" not in st.session_state:
 if "tahapan_ujian" not in st.session_state:
     st.session_state["tahapan_ujian"] = []
 
-# Inisialisasi Session State Khusus Kuis
+# --- INISIALISASI STATE UNTUK KUIS ---
 if "soal_acak" not in st.session_state:
     st.session_state.soal_acak = random.sample(SOAL_MASTER, len(SOAL_MASTER))
 if "skor" not in st.session_state:
@@ -161,6 +161,7 @@ if "sudah_jawab" not in st.session_state:
 # --- HALAMAN 1: FORM LOGIN ---
 if not st.session_state["login_sukses"]:
     st.markdown("<h2 style='text-align: center; color: #0284C7;'>🔐 LOGIN SISTEM LABORATORIUM</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #64748B;'>Silakan masukkan kredensial analis Anda untuk mengakses instrumen lab.</p>", unsafe_allow_html=True)
     st.markdown("---")
     
     _, col_login, _ = st.columns([1, 2, 1])
@@ -176,17 +177,18 @@ if not st.session_state["login_sukses"]:
                     st.session_state["pemicu_petasan"] = True
                     st.rerun()
                 else:
-                    st.error("❌ Username atau Password salah!")
+                    st.error("❌ Username atau Password salah! Silakan periksa kembali.")
 
 # --- HALAMAN 2: APLIKASI UTAMA (Jika Sudah Login) ---
 else:
+    # --- PENGATURAN SIDEBAR (SISI KIRI) ---
     with st.sidebar:
         st.markdown("### 👤 Profil Analis")
         st.markdown(f"Selamat Datang, *{USER_VALID}*")
         st.caption(f"🎯 Target Hari Ini: {st.session_state['target_belajar']}")
         st.markdown("---")
         
-        st.markdown("### 🗺️ Menu Navigasi (Kelompok 1)")
+        st.markdown("### 🗺️ Menu Navigasi")
         pilihan_halaman = st.sidebar.radio(
             "Pilih Halaman Kerja:",
             [
@@ -195,8 +197,7 @@ else:
                 "🧪 Rak Reagen Organik", 
                 "🎮 Simulator TPS (Ujian)", 
                 "🦺 K3 & APD Laboratorium", 
-                "📊 Perencana Sampling", 
-                "🏆 Kuis Akbar Kualitatif", # Menu baru kuis kamu!
+                "🏆 Kuis Akbar Kualitatif", 
                 "📚 Referensi & Video", 
                 "📋 Logbook Pengujian"
             ]
@@ -208,150 +209,440 @@ else:
             st.session_state["pemicu_petasan"] = False
             st.rerun()
 
+    # --- KONTEN HALAMAN UTAMA (SISI KANAN) ---
+    
     # ================= KONDISI A: BERANDA LAB =================
     if pilihan_halaman == "🏠 Beranda Lab":
         if st.session_state["pemicu_petasan"]:
             st.balloons()
-            st.success("🎉 *Yey kamu berhasil login!* Selamat datang di dashboard Kelompok 1.")
+            st.success("🎉 *Yey kamu berhasil login!* Selamat datang kembali di laboratorium virtual.")
             st.session_state["pemicu_petasan"] = False
 
-        st.markdown("<h2 style='text-align: center; color: #0284C7;'>👋 SELAMAT DATANG DI LAB-ANALITIKA VIRTUAL</h2>", unsafe_allow_html=True)
-        st.markdown("<p style='text-align: center; color: #64748B;'>Dashboard Eksklusif Kelompok 1 — Spesialisasi Identifikasi Kation & Anion</p>", unsafe_allow_html=True)
+        st.markdown("<h2 style='text-align: center; color: #0284C7;'>👋 SELAMAT DATANG DI ASISTEN LAB ANALITIK</h2>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; color: #64748B;'>Sistem Informasi Manajemen Reagen & Instrumentasi Virtual</p>", unsafe_allow_html=True)
         st.markdown("---")
         
+        # Kotak Quotes Motivasi Asli
+        st.markdown("""
+            <div style='background-color: #E0F2FE; border-left: 6px solid #0284C7; padding: 15px; border-radius: 6px; text-align: center; margin-bottom: 25px;'>
+                <p style='color: #0369A1; font-style: italic; font-size: 16px; margin: 0;'>
+                    "Sama seperti reaksi kimia eksoterm yang melepaskan energi, biarlah semangat belajarmu hari ini memancar dan menginspirasi sekitar! Jangan takut salah, karena eror dan kegagalan di lab adalah fraksi murni dari proses menuju kebenaran ilmiah."
+                </p>
+                <p style='color: #0284C7; font-size: 12px; font-weight: bold; margin-top: 5px; margin-bottom: 0;'>🔬 Salam Analis Hebat 🔬</p>
+            </div>
+        """, unsafe_allow_html=True)
+
+        # Kartu Sambutan Asli
+        st.markdown("""
+            <div style='background-color: #FFFFFF; border: 1px solid #E2E8F0; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 25px;'>
+                <h4 style='color: #1E293B; margin: 0;'>Halo, Analis Kimia! 🧪</h4>
+                <p style='color: #475569; margin-top: 8px; line-height: 1.5; font-size: 15px;'>
+                    Selamat datang di platform asisten laboratorium virtual. Web ini sekarang dilengkapi dengan modul utama: 
+                    <b>Identifikasi Kation/Anion Anorganik</b>, <b>Uji Gugus Fungsi Organik</b>, serta <b>Referensi Video & Buku Panduan</b> resmi. Silakan tentukan target belajar Anda di bawah sebelum memulai praktikum virtual!
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
+        
         st.markdown("### 🎯 Identifikasi Target Belajar Praktikum")
+        st.markdown("Pilih fokus kompetensi analisis yang ingin Anda kuasai pada sesi praktikum virtual hari ini:")
+        
         opsi_target = [
             "Memahami Sistem Pemisahan Kation Golongan I-V",
             "Mempelajari Reaksi Identifikasi Anion Spesifik (Sulfat, Halida, Nitrat)",
-            "Menguasai Karakteristik Warna Uji Nyala Api Logam Alkali/Alkali Tanah"
+            "Menguasai Karakteristik Warna Uji Nyala Api Logam Alkali/Alkali Tanah",
+            "Memahami Reaksi Identifikasi Senyawa Organik (Karbonil & Karboksilat)"
         ]
         
         with st.form("form_target"):
             pilihan_target = st.selectbox("Pilih Fokus Belajar Anda:", opsi_target)
             tombol_target = st.form_submit_button("🔒 Kunci & Simpan Target Belajar")
+            
             if tombol_target:
                 st.session_state["target_belajar"] = pilihan_target
-                st.success(f"🎯 Target berhasil dikunci!")
+                st.success(f"🎯 Target berhasil dikunci! Hari ini Anda berfokus pada: *{pilihan_target}*")
+                st.toast("Target belajar diperbarui!", icon="🎯")
                 st.rerun()
 
     # ================= KONDISI B: IDENTIFIKASI ION ANORGANIK =================
     elif pilihan_halaman == "⚡ Identifikasi Ion":
         st.markdown("<h2 style='text-align: center; color: #0284C7;'>⚡ SISTEM IDENTIFIKASI KATION & ANION</h2>", unsafe_allow_html=True)
+        st.markdown(f"<p style='text-align: center; color: #64748B;'>Fokus Target Sesi Ini: <b>{st.session_state['target_belajar']}</b></p>", unsafe_allow_html=True)
         st.markdown("---")
-        jenis_analisis = st.selectbox("Pilih Metode Analisis:", ["Skema Pemisahan Kation Gol. I-V", "Uji Anion (Non-Logam)", "Uji Nyala Api (Flame Test)"], index=None)
-        
-        nama_reagen, kesimpulan_gugus = "-", "-"
+
+        with st.expander("📚 Klik di sini untuk membaca Materi & Skema Dasar"):
+            st.markdown("""
+            ### Dasar Teori Pemisahan Kation
+            Analisis kualitatif kation didasarkan pada perbedaan kelarutan garam-garamnya. 
+            Secara umum, kation dipisahkan menjadi 5 golongan berdasarkan reagen selektif:
+            * *Golongan I:* Mengendap dengan HCl encer ($Ag^+$, $Pb^{2+}$, $Hg_2^{2+}$).
+            * *Golongan II:* Mengendap dengan $H_2S$ dalam suasana asam.
+            * *Golongan III:* Mengendap dengan $H_2S$ dalam suasana basa / amoniakal.
+            * *Golongan IV:* Mengendap dengan $(NH_4)_2CO_3$ ($Ba^{2+}$, $Sr^{2+}$, $Ca^{2+}$).
+            * *Golongan V:* Sisa kation yang tidak mengendap ($Mg^{2+}$, $Na^+$, $K^+$).
+            """)
+            st.info("💡 Tips Lab: Selalu cuci endapan dengan akuades sebelum menambahkan reagen tahap berikutnya agar tidak ada kontaminasi ion dari golongan sebelumnya.")
+
+        jenis_analisis = st.selectbox(
+            "Pilih Metode Analisis:",
+            ["Skema Pemisahan Kation Gol. I-V", "Uji Anion (Non-Logam)", "Uji Nyala Api (Flame Test)"],
+            index=None, placeholder="Pilih metode pengujian ion..."
+        )
+        st.divider()
+
+        nama_reagen = "-"
+        kesimpulan_gugus = "-"
 
         if jenis_analisis == "Skema Pemisahan Kation Gol. I-V":
-            tahap_1 = st.radio("Tahap 1: Hasil reaksi dengan HCl encer:", ["Terbentuk Endapan (AgCl, PbCl2, Hg2Cl2)", "Berupa Filtrat (Al3+, Fe3+, Ba2+)"], index=None)
+            st.subheader("Pemisahan Kation Golongan I-V")
+            st.write("Berdasarkan Skema: $Ag^+$, $Pb^{2+}$, $Hg_2^{2+}$, $Al^{3+}$, $Fe^{3+}$, $Ba^{2+}$, $Sr^{2+}$, $Ca^{2+}$")
+            st.write("*Tahap 1: Penambahan HCl encer*")
+            
+            tahap_1 = st.radio(
+                "Pilih jalur berdasarkan hasil reaksi dengan HCl encer:",
+                ["Terbentuk Endapan (AgCl, PbCl2, Hg2Cl2)", "Berupa Filtrat (Al3+, Fe3+, Ba2+, Sr2+, Ca2+)"],
+                index=None
+            )
+
             if tahap_1 == "Terbentuk Endapan (AgCl, PbCl2, Hg2Cl2)":
-                tahap_2 = st.radio("Apa yang terjadi setelah dicuci & dipanaskan dengan air?", ["Endapan Larut (Pb2+)", "Endapan Tidak Larut (AgCl, Hg2Cl2)"], index=None)
-                if tahap_2 == "Endapan Larut (Pb2+)":
-                    st.success("✨ Terbentuk endapan $PbCrO_4$ kuning jika ditambah $K_2CrO_4$. Kation: *Timbal ($Pb^{2+}$)*")
-                    nama_reagen, kesimpulan_gugus = "HCl -> Panas", "Kation Timbal (Pb²⁺)"
+                st.info("🧪 Fokus pada Endapan: Tambahkan $H_2O$ (cuci) lalu panaskan dengan $H_2O$.")
+                tahap_2_gol1 = st.radio("Apa yang terjadi pada endapan setelah dipanaskan?", 
+                    ["Endapan Larut (Pb2+)", "Endapan Tidak Larut (AgCl, Hg2Cl2)"], index=None)
+                
+                if tahap_2_gol1 == "Endapan Larut (Pb2+)":
+                    st.write("➡️ Tambahkan $K_2CrO_4$")
+                    st.success("✨ Terbentuk endapan $PbCrO_4$ kuning. Kation: *Timbal ($Pb^{2+}$)*")
+                    nama_reagen, kesimpulan_gugus = "HCl -> Pemanasan -> K2CrO4", "Kation Timbal (Pb²⁺)"
+                    
+                elif tahap_2_gol1 == "Endapan Tidak Larut (AgCl, Hg2Cl2)":
+                    st.write("➡️ Tambahkan $NH_4OH$ berlebih (>>)")
+                    tahap_3_gol1 = st.radio("Apa hasil penambahan amonia?", 
+                        ["Endapan Putih Hg(NH2)Cl + Hitam Hg", "Menjadi Larutan (Ag(NH3)2+ Cl-)"], index=None)
+                    
+                    if tahap_3_gol1 == "Endapan Putih Hg(NH2)Cl + Hitam Hg":
+                        st.success("✨ Kation: *Merkurium(I) ($Hg_2^{2+}$)*")
+                        nama_reagen, kesimpulan_gugus = "HCl -> NH4OH (>>)", "Kation Merkurium(I) (Hg₂²⁺)"
+                    elif tahap_3_gol1 == "Menjadi Larutan (Ag(NH3)2+ Cl-)":
+                        st.write("➡️ Tambahkan $HNO_3$")
+                        st.success("✨ Terbentuk endapan $AgCl$ putih. Kation: *Perak ($Ag^+$)*")
+                        nama_reagen, kesimpulan_gugus = "HCl -> NH4OH -> HNO3", "Kation Perak (Ag⁺)"
+
+            elif tahap_1 == "Berupa Filtrat (Al3+, Fe3+, Ba2+, Sr2+, Ca2+)":
+                st.info("🧪 Fokus pada Filtrat: Tambahkan $NH_4OH$ berlebih (>>).")
+                tahap_2_filtrat = st.radio("Apa yang terbentuk?", 
+                    ["Terbentuk Endapan (Al(OH)3, Fe(OH)3)", "Berupa Filtrat (Ba2+, Sr2+, Ca2+)"], index=None)
+                
+                if tahap_2_filtrat == "Terbentuk Endapan (Al(OH)3, Fe(OH)3)":
+                    st.write("➡️ Tambahkan $NaOH$")
+                    tahap_3_gol3 = st.radio("Apa hasil penambahan NaOH?", 
+                        ["Endapan Fe(OH)3 (Tidak larut)", "Larutan Al(OH)4- (Larut)"], index=None)
+                    
+                    if tahap_3_gol3 == "Endapan Fe(OH)3 (Tidak larut)":
+                        st.write("➡️ Tambahkan $HNO_3$ (menjadi $Fe^{3+}$), lalu tambahkan $SCN^-$")
+                        st.success("✨ Terbentuk kompleks $Fe(SCN)_3$ merah. Kation: *Besi(III) ($Fe^{3+}$)*")
+                        nama_reagen, kesimpulan_gugus = "HCl Filtrat -> NH4OH -> NaOH -> HNO3 + SCN-", "Kation Besi(III) (Fe³⁺)"
+                    elif tahap_3_gol3 == "Larutan Al(OH)4- (Larut)":
+                        st.write("➡️ Tambahkan $HCl$ lalu $Na_2CO_3$")
+                        st.success("✨ Terbentuk endapan $Al(OH)_3$ putih. Kation: *Aluminium ($Al^{3+}$)*")
+                        nama_reagen, kesimpulan_gugus = "HCl Filtrat -> NH4OH -> NaOH -> HCl + Na2CO3", "Kation Aluminium (Al³⁺)"
+                        
+                elif tahap_2_filtrat == "Berupa Filtrat (Ba2+, Sr2+, Ca2+)":
+                    st.write("➡️ Tambahkan $K_2CrO_4$")
+                    tahap_3_gol4 = st.radio("Apa hasilnya?", 
+                        ["Terbentuk Endapan (BaCrO4, SrCrO4)", "Berupa Filtrat (Ca2+)"], index=None)
+                    
+                    if tahap_3_gol4 == "Terbentuk Endapan (BaCrO4, SrCrO4)":
+                        st.write("➡️ Tambahkan $CH_3COOH$")
+                        tahap_4_gol4 = st.radio("Hasil penambahan asam asetat:", 
+                            ["Endapan BaCrO4 Kuning", "Larutan Sr2+"], index=None)
+                        
+                        if tahap_4_gol4 == "Endapan BaCrO4 Kuning":
+                            st.success("✨ Kation: *Barium ($Ba^{2+}$)*")
+                            nama_reagen, kesBuffer = "Filtrat -> K2CrO4 -> CH3COOH", "Kation Barium (Ba²⁺)"
+                        elif tahap_4_gol4 == "Larutan Sr2+":
+                            st.write("➡️ Tambahkan $Na_2CO_3$")
+                            st.success("✨ Terbentuk endapan $SrCO_3$ putih. Kation: *Stronsium ($Sr^{2+}$)*")
+                            nama_reagen, kesimpulan_gugus = "Filtrat -> K2CrO4 -> CH3COOH -> Na2CO3", "Kation Stronsium (Sr²⁺)"
+                            
+                    elif tahap_3_gol4 == "Berupa Filtrat (Ca2+)":
+                        st.write("➡️ Tambahkan $H_2C_2O_4$ dan $NH_4OH$")
+                        st.success("✨ Terbentuk endapan $CaC_2O_4$ putih. Kation: *Kalsium ($Ca^{2+}$)*")
+                        nama_reagen, kesPrefix = "Filtrat -> K2CrO4 Filtrat -> H2C2O4 + NH4OH", "Kation Kalsium (Ca²⁺)"
+
+        elif jenis_analisis == "Uji Anion (Non-Logam)":
+            st.subheader("Uji Identifikasi Anion Spesifik")
+            reagen_anion = st.selectbox("Pilih reagen yang ditambahkan ke sampel:", [
+                "BaCl2 (Barium Klorida)", "AgNO3 (Perak Nitrat)", "FeSO4 + H2SO4 pekat (Uji Cincin Cokelat)"
+            ], index=None)
+
+            if reagen_anion == "BaCl2 (Barium Klorida)":
+                st.write("Hasil: Terbentuk endapan putih yang *tidak larut* dalam HCl encer.")
+                st.success("✨ Anion Teridentifikasi: *Sulfat ($SO_4^{2-}$)*")
+                nama_reagen, kesimpulan_gugus = "BaCl2 + HCl", "Anion Sulfat (SO₄²⁻)"
+            elif reagen_anion == "AgNO3 (Perak Nitrat)":
+                hasil_agno3 = st.radio("Warna endapan yang terbentuk:", ["Putih", "Kuning Pucat", "Kuning Terang"], index=None)
+                if hasil_agno3 == "Putih":
+                    st.success("✨ Anion Teridentifikasi: *Klorida ($Cl^-$)*")
+                    nama_reagen, kesimpulan_gugus = "AgNO3", "Anion Klorida (Cl⁻)"
+                elif hasil_agno3 == "Kuning Pucat":
+                    st.success("✨ Anion Teridentifikasi: *Bromida ($Br^-$)*")
+                    nama_reagen, kesPrefix = "AgNO3", "Anion Bromida (Br⁻)"
+                elif hasil_agno3 == "Kuning Terang":
+                    st.success("✨ Anion Teridentifikasi: *Iodida ($I^-$)*")
+                    nama_reagen, kesimpulan_gugus = "AgNO3", "Anion Iodida (I⁻)"
+            elif reagen_anion == "FeSO4 + H2SO4 pekat (Uji Cincin Cokelat)":
+                st.write("Hasil: Terbentuk cincin berwarna cokelat di antara dua lapisan cairan.")
+                st.success("✨ Anion Teridentifikasi: *Nitrat ($NO_3^-$)*")
+                nama_reagen, kesimpulan_gugus = "FeSO4 + H2SO4 pekat", "Anion Nitrat (NO₃⁻)"
+
+        elif jenis_analisis == "Uji Nyala Api (Flame Test)":
+            st.subheader("Uji Nyala Logam Alkali & Alkali Tanah")
+            warna_nyala = st.selectbox("Pilih warna nyala api yang terlihat:", [
+                "Kuning keemasan intens", "Merah bata / Merah jingga", "Hijau kekuningan / Hijau apel", "Merah tua (Crimson)", "Ungu / Lilac"
+            ], index=None)
+
+            if warna_nyala == "Kuning keemasan intens":
+                st.success("✨ Logam Teridentifikasi: *Natrium ($Na^+$)*")
+                nama_reagen, kesimpulan_gugus = "Flame Test", "Logam Natrium (Na⁺)"
+            elif warna_nyala == "Merah bata / Merah jingga":
+                st.success("✨ Logam Teridentifikasi: *Kalsium ($Ca^{2+}$)*")
+                nama_reagen, kesimpulan_gugus = "Flame Test", "Logam Kalsium (Ca²⁺)"
+            elif warna_nyala == "Hijau kekuningan / Hijau apel":
+                st.success("✨ Logam Teridentifikasi: *Barium ($Ba^{2+}$)*")
+                nama_reagen, kesimpulan_gugus = "Flame Test", "Logam Barium (Ba²⁺)"
+            elif warna_nyala == "Merah tua (Crimson)":
+                st.success("✨ Logam Teridentifikasi: *Stronsium ($Sr^{2+}$)* atau *Litium ($Li^+$)*")
+                nama_reagen, kesimpulan_gugus = "Flame Test", "Logam Stronsium/Litium"
+            elif warna_nyala == "Ungu / Lilac":
+                st.success("✨ Logam Teridentifikasi: *Kalium ($K^+$)*")
+                nama_reagen, kesimpulan_gugus = "Flame Test", "Logam Kalium (K⁺)"
 
         if kesimpulan_gugus != "-":
-            if st.button("💾 Catat ke Logbook"):
-                st.session_state["logbook_data"].append({"Waktu Analisis": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "Target Belajar": st.session_state["target_belajar"], "Reagen Digunakan": nama_reagen, "Hasil Identifikasi": kesimpulan_gugus})
-                st.success("📝 Data berhasil disimpan!")
+            st.markdown("---")
+            if st.button("💾 Catat Hasil Uji Anorganik ke Logbook"):
+                waktu_sekarang = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                st.session_state["logbook_data"].append({
+                    "Waktu Analisis": waktu_sekarang,
+                    "Target Belajar": st.session_state["target_belajar"],
+                    "Reagen Digunakan": nama_reagen,
+                    "Hasil Identifikasi": kesimpulan_gugus
+                })
+                st.success("📝 Data pengujian anorganik berhasil direkam ke Logbook digital.")
+                st.toast("Data terekam!", icon="📝")
 
     # ================= KONDISI C: RAK REAGEN ORGANIK =================
     elif pilihan_halaman == "🧪 Rak Reagen Organik":
-        st.markdown("<h2 style='text-align: center; color: #0284C7;'>🧪 RAK REAGEN VIRTUAL ORGANIK</h2>", unsafe_allow_html=True)
+        st.markdown("<h2 style='text-align: center; color: #0284C7;'>🧪 RAK REAGEN VIRTUAL (ORGANIK)</h2>", unsafe_allow_html=True)
+        st.markdown(f"<p style='text-align: center; color: #64748B;'>Fokus Target Sesi Ini: <b>{st.session_state['target_belajar']}</b></p>", unsafe_allow_html=True)
         st.markdown("---")
-        col_reg1, col_reg2, col_reg3 = st.columns(3)
-        with col_reg1: sakelar_lakmus = st.toggle("Celup Lakmus Biru")
-        with col_reg2: sakelar_schiff = st.toggle("Tetes Reagen Schiff")
-        with col_reg3: sakelar_bisulfit = st.toggle("Tambah NaHSO3")
 
-        if sakelar_lakmus: st.info("🔴 Hasil: Warna Merah -> Golongan ASAM KARBOKSILAT (—COOH)")
-        elif sakelar_schiff: st.info("🟣 Hasil: Ungu Kemerahan -> Golongan ALDEHID (—CHO)")
-        elif sakelar_bisulfit: st.info("⚪ Hasil: Kristal Putih -> Golongan KETON (—CO—)")
+        st.markdown("### 🎛️ Panel Sakelar Reagen Organik (On / Off)")
+        col_reg1, col_reg2, col_reg3 = st.columns(3)
+
+        with col_reg1:
+            st.markdown("*Uji Lakmus*")
+            sakelar_lakmus = st.toggle("Celup Lakmus Biru")
+        with col_reg2:
+            st.markdown("*Uji Schiff*")
+            sakelar_schiff = st.toggle("Tetes Reagen Schiff")
+        with col_reg3:
+            st.markdown("*Uji Bisulfit*")
+            sakelar_bisulfit = st.toggle("Tambah NaHSO3")
+
+        st.markdown("---")
+        st.markdown("### 🔍 Kondisi Fisik Tabung Reaksi")
+
+        sakelar_aktif = sum([sakelar_lakmus, sakelar_schiff, sakelar_bisulfit])
+        nama_reagen = "-"
+        kesimpulan_gugus = "-"
+
+        if sakelar_aktif > 1:
+            st.warning("⚠️ *Kontaminasi Reagen!* Harap hanya menyalakan satu sakelar reagen saja untuk menjaga akurasi analisis sampel.")
+        elif sakelar_lakmus:
+            nama_reagen = "Kertas Lakmus Biru"
+            kesimpulan_gugus = "Asam Karboksilat (—COOH)"
+            st.markdown("""
+                <div style='background-color: #FFE2E2; border-left: 8px solid #EF4444; padding: 20px; border-radius: 8px;'>
+                    <h3 style='color: #991B1B; margin: 0;'>🔴 Tabung Bereaksi: WARNA MERAH</h3>
+                    <p style='color: #7F1D1D; margin-top: 10px; font-size: 16px;'>
+                        <b>Analisis Detektor:</b> Kertas lakmus biru langsung berubah menjadi merah! <br>
+                        🎯 Fix, sampel ini adalah golongan <b>ASAM KARBOKSILAT (—COOH)</b> karena memiliki ion H+ bebas.
+                    </p>
+                </div>
+            """, unsafe_allow_html=True)
+        elif sakelar_schiff:
+            nama_reagen = "Reagen Schiff"
+            kesimpulan_gugus = "Aldehid / Alkanal (—CHO)"
+            st.markdown("""
+                <div style='background-color: #FAE8FF; border-left: 8px solid #D946EF; padding: 20px; border-radius: 8px;'>
+                    <h3 style='color: #86198F; margin: 0;'>🟣 Tabung Bereaksi: WARNA UNGU KEMERAHAN</h3>
+                    <p style='color: #701A75; margin-top: 10px; font-size: 16px;'>
+                        <b>Analisis Detektor:</b> Reagen Schiff kembali ke warna asalnya akibat gugus karbonil bebas.<br>
+                        🎯 Fix, sampel ini adalah golongan <b>ALDEHID / ALKANAL (—CHO)</b>.
+                    </p>
+                </div>
+            """, unsafe_allow_html=True)
+        elif sakelar_bisulfit:
+            nama_reagen = "Natrium Bisulfit (NaHSO3)"
+            kesimpulan_gugus = "Keton / Alkanon (—CO—)"
+            st.markdown("""
+                <div style='background-color: #F8FAFC; border-left: 8px solid #64748B; padding: 20px; border-radius: 8px; border: 1px solid #CBD5E1;'>
+                    <h3 style='color: #334155; margin: 0;'>⚪ Tabung Bereaksi: TERBENTUK KRISTAL PUTIH</h3>
+                    <p style='color: #1E293B; margin-top: 10px; font-size: 16px;'>
+                        <b>Analisis Detektor:</b> Terjadi reaksi adisi nukleofilik yang menghasilkan garam sukar larut.<br>
+                        🎯 Fix, sampel ini adalah golongan <b>KETON / ALKANON (—CO—)</b>.
+                    </p>
+                </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown("""
+                <div style='background-color: #FFFFFF; border-left: 8px solid #0EA5E9; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);'>
+                    <h3 style='color: #075985; margin: 0;'>💧 Tabung Saat Ini: BENING & JERNIH</h3>
+                    <p style='color: #0C4A6E; margin-top: 10px;'>
+                        Belum ada reagen yang dimasukkan ke dalam sampel. Silakan klik/nyalakan salah satu <b>sakelar toggle</b> di atas untuk memulai reaksi kimia virtual!
+                    </p>
+                </div>
+            """, unsafe_allow_html=True)
+
+        if sakelar_aktif == 1:
+            st.markdown("---")
+            if st.button("💾 Catat Hasil Uji Organik ke Logbook"):
+                waktu_sekarang = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                st.session_state["logbook_data"].append({
+                    "Waktu Analisis": waktu_sekarang,
+                    "Target Belajar": st.session_state["target_belajar"],
+                    "Reagen Digunakan": nama_reagen,
+                    "Hasil Identifikasi": kesimpulan_gugus
+                })
+                st.success("📝 Data pengujian organik berhasil direkam ke Logbook digital.")
+                st.toast("Data terekam!", icon="📝")
 
     # ================= KONDISI D: SIMULATOR UJIAN TPS VIRTUAL =================
     elif pilihan_halaman == "🎮 Simulator TPS (Ujian)":
         st.markdown("<h2 style='text-align: center; color: #0284C7;'>🎮 SIMULATOR TES PRAKTIK SIMULTAN (TPS)</h2>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; color: #64748B;'>Uji logika pemisahan kation kamu di sini. Tebak isi botol sampel misterius!</p>", unsafe_allow_html=True)
+        st.divider()
+
         st.warning("🔬 *Botol Ujian Nomor 07:* Analisis kation apa yang ada di dalam botol ini!")
         
-        if st.button("➕ Tambahkan Larutan HCl Encer"):
-            st.session_state["tahapan_ujian"].append("Ditambah HCl -> Terbentuk Endapan Putih")
-        if st.button("🔥 Panaskan Endapan"):
-            st.session_state["tahapan_ujian"].append("Dipanaskan -> Endapan Larut Sempurna")
+        col_m1, col_m2 = st.columns(2)
+        with col_m1:
+            if st.button("➕ Tambahkan Larutan HCl Encer"):
+                st.session_state["tahapan_ujian"].append("Ditambah HCl -> Terbentuk Endapan Putih")
+        with col_m2:
+            if st.button("🔥 Panaskan Endapan + Sentrifugasi"):
+                if "Ditambah HCl -> Terbentuk Endapan Putih" in st.session_state["tahapan_ujian"]:
+                    st.session_state["tahapan_ujian"].append("Dipanaskan -> Endapan Larut Sempurna")
+                else:
+                    st.error("Eror Prosedur: Tambahkan HCl dulu sebelum memanaskan endapan!")
 
         if st.session_state["tahapan_ujian"]:
-            for langkah in st.session_state["tahapan_ujian"]: st.write(f"- {langkah}")
+            st.info("📋 *Jalur Reaksi yang Anda Lakukan:*")
+            for langkah in st.session_state["tahapan_ujian"]:
+                st.write(f"- {langkah}")
 
         with st.form("form_tps"):
-            tebakan = st.selectbox("Kesimpulan Akhir Kation:", ["Perak (Ag+)", "Timbal (Pb2+)", "Besi (Fe3+)"])
-            if st.form_submit_button("Kirim Jawaban"):
-                if tebakan == "Timbal (Pb2+)": st.success("🎉 Jawaban Benar! Nilai Anda: 100")
-                else: st.error("❌ Salah, coba cek lagi sifat kelarutannya.")
+            tebakan = st.selectbox("Kesimpulan Akhir Anda, Kation Ini Adalah:", ["Perak (Ag+)", "Timbal (Pb2+)", "Besi (Fe3+)", "Aluminium (Al3+)"])
+            submit_ujian = st.form_submit_button("Kirim Jawaban ke Instruktur")
+            if submit_ujian:
+                if tebakan == "Timbal (Pb2+)":
+                    st.balloons()
+                    st.success("🎉 *Luar Biasa! Jawaban Benar.* Nilai TPS Anda: 100! Prosedur pemisahan Anda valid.")
+                    st.session_state["tahapan_ujian"] = []
+                else:
+                    st.error("❌ *Jawaban Salah!* Cek kembali kelarutan senyawa kloridanya.")
 
-    # ================= KONDISI E: MODUL K3 & APD LABORAT (REVISI KAMU) =================
+    # ================= KONDISI E: REVISI MODUL K3 & APD VIRTUAL =================
     elif pilihan_halaman == "🦺 K3 & APD Laboratorium":
         st.markdown("<h2 style='text-align: center; color: #0284C7;'>🦺 Pusat Panduan Interaktif K3 & APD Laboratorium</h2>", unsafe_allow_html=True)
-        st.write("Platform edukasi digital untuk memastikan keselamatan kerja sebelum praktikum kimia kualitatif.")
+        st.write("Platform edukasi digital untuk memastikan keselamatan kerja sebelum melakukan praktikum kimia analisis kualitatif.")
         st.markdown("---")
 
-        tab_apd, tab_simulasi, tab_ghs, tab_darurat = st.tabs([
-            "🛡️ 1. Katalog APD Wajib", "🕹️ 2. Simulasi Memakai APD", "⚠️ 3. Simbol Bahaya GHS", "🚨 4. Prosedur Darurat (First Aid)"
+        tab_apd, tab_simulasi, tab_darurat = st.tabs([
+            "🛡️ 1. Katalog APD Wajib", "🕹️ 2. Simulasi Memakai APD", "🚨 3. Prosedur Darurat (First Aid)"
         ])
 
         with tab_apd:
             st.header("Katalog Alat Pelindung Diri (APD) Standar")
+            st.write("Berikut adalah spesifikasi APD yang wajib digunakan di laboratorium kimia:")
             col1, col2 = st.columns(2)
             with col1:
                 with st.container(border=True):
                     st.subheader("👕 1. Jas Laboratorium")
-                    st.markdown("* *Bahan:* Katun 100% (Tebal).\n* *Fungsi:* Melindungi dari percikan zat kimia pekat.")
+                    st.markdown("""
+                    * *Bahan:* Katun 100% (Tebal).
+                    * *Fungsi:* Melindungi tubuh dan pakaian harian dari percikan zat asam/basa pekat.
+                    * *Aturan K3:* Wajib berlengan panjang dan seluruh kancing harus terpasang rapi. Dilarang menggulung lengan baju.
+                    """)
                 with st.container(border=True):
-                    st.subheader("🥽 2. Safety Goggles")
-                    st.markdown("* *Fungsi:* Mencegah percikan cairan korosif mengenai kornea mata.")
+                    st.subheader("🥽 2. Safety Goggles (Kacamata Pelindung)")
+                    st.markdown("""
+                    * *Bahan:* Polikarbonat anti-pecah dengan pelindung samping rapat.
+                    * *Fungsi:* Mencegah percikan cairan korosif atau uap tajam langsung mengenai kornea mata.
+                    * *Aturan K3:* Kacamata baca biasa tidak diizinkan sebagai pengganti karena memiliki celah di bagian samping.
+                    """)
             with col2:
                 with st.container(border=True):
                     st.subheader("🧤 3. Sarung Tangan Nitril")
-                    st.markdown("* *Fungsi:* Melindungi dari penetrasi logam berat ($Pb^{2+}$, $Hg^{2+}$).")
+                    st.markdown("""
+                    * *Bahan:* Karet Nitril sintetik (bebas latex).
+                    * *Fungsi:* Melindungi pori-pori kulit dari penetrasi larutan logam berat berbahaya ($Pb^{2+}$, $Hg^{2+}$) dan asam pekat.
+                    * *Aturan K3:* Jangan gunakan sarung tangan kain karena justru menyerap cairan kimia.
+                    """)
                 with st.container(border=True):
                     st.subheader("👟 4. Sepatu Tertutup")
-                    st.markdown("* *Fungsi:* Menahan kejatuhan pecahan kaca atau tumpahan reagen.")
+                    st.markdown("""
+                    * *Bahan:* Kulit atau sintetik tebal (bukan kain tipis/kanvas).
+                    * *Fungsi:* Menahan jatuhnya alat kaca yang pecah atau tumpahan reagen cair di lantai.
+                    * *Aturan K3:* Sandal, sepatu sandal, atau flat-shoes dengan punggung kaki terbuka dilarang keras.
+                    """)
 
         with tab_simulasi:
             st.header("🕹️ Simulasi Virtual: Ruang Ganti APD")
+            st.write("Sebelum Anda diizinkan klik 'Masuk Laboratorium', lengkapi diri Anda dengan memilih APD yang benar di bawah ini:")
             pilih_jas = st.checkbox("Pakai Jas Laboratorium Katun Lengan Panjang")
             pilih_goggles = st.checkbox("Pakai Safety Goggles Rapat")
             pilih_sarung = st.selectbox("Pilih Jenis Sarung Tangan:", ["Tidak Pakai", "Sarung Tangan Kain", "Sarung Tangan Nitril K3"])
-            pilih_sepatu = st.radio("Pilih Alas Kaki:", ["Sandal Santai", "Sepatu Kanvas", "Sepatu Kulit Tertutup"])
+            pilih_sepatu = st.radio("Pilih Alas Kaki:", ["Sandal Santai", "Sepatu Kanvas / Slip-on", "Sepatu Kulit Tertutup"], index=0)
             
+            st.markdown("---")
             if st.button("Verifikasi Kesiapan APD 🛡️", type="primary"):
-                if pilih_jas and pilih_goggles and pilih_sarung == "Sarung Tangan Nitril K3" and pilih_sepatu == "Sepatu Kulit Tertutup":
+                is_aman = True
+                pesan_error = []
+                if not pilih_jas: is_aman = False; pesan_error.append("- Anda belum memakai Jas Laboratorium.")
+                if not pilih_goggles: is_aman = False; pesan_error.append("- Mata Anda sangat rentan, pasang Safety Goggles!")
+                if pilih_sarung != "Sarung Tangan Nitril K3": is_aman = False; pesan_error.append("- Pilihan sarung tangan salah! Gunakan bahan Nitril untuk proteksi kimia.")
+                if pilih_sepatu != "Sepatu Kulit Tertutup": is_aman = False; pesan_error.append("- Alas kaki tidak aman. Wajib menggunakan Sepatu Tertutup.")
+                
+                if is_aman:
                     st.balloons()
-                    st.success("🟢 STATUS: AMAN! Seluruh APD Anda memenuhi standar K3 Kelompok 1.")
+                    st.success("🟢 STATUS: AMAN! Seluruh APD Anda memenuhi standar K3. Anda diizinkan masuk ke laboratorium.")
                 else:
-                    st.error("🔴 STATUS: BAHAYA / DITOLAK! Lengkapi kembali parameter APD wajib Anda.")
-
-        with tab_ghs:
-            st.header("⚠️ Sistem Klasifikasi Bahaya GHS")
-            simbol = st.radio("Pilih Simbol Bahaya:", ["💀 Toksik Akut", "🔥 Korosif", "⭕ Pengoksidasi", "⚠️ Bahaya Kesehatan Jangka Panjang"])
-            if simbol == "💀 Toksik Akut": st.error("### 💀 Toksik Akut\n* *Contoh:* Kalium Sianida ($KCN$), Gas $H_2S$.")
-            elif simbol == "🔥 Korosif": st.warning("### 🔥 Korosif\n* *Contoh:* Asam Sulfat ($H_2SO_4$), $HCl$, $NaOH$.")
-            elif simbol == "⭕ Pengoksidasi": st.info("### ⭕ Pengoksidasi\n* *Contoh:* Asam Nitrat ($HNO_3$).")
-            elif simbol == "⚠️ Bahaya Kesehatan Jangka Panjang": st.warning("### ⚠️ Bahaya Kesehatan\n* *Contoh:* Larutan Kation Timbal ($Pb^{2+}$).")
+                    st.error("🔴 STATUS: BAHAYA / DITOLAK! Anda belum siap memasuki laboratorium karena:")
+                    for err in pesan_error: st.write(err)
 
         with tab_darurat:
             st.header("🚨 Prosedur Tanggap Darurat Laboratorium")
-            with st.expander("👁️ 1. Kontaminasi Bahan Kimia pada Mata"): st.markdown("Segera bawa korban ke *Eye Wash Station*, bilas air mengalir selama 15-20 menit.")
-            with st.expander("🦺 2. Tumpahan Zat Kimia Skala Besar"): st.markdown("Segera menuju ke area *Safety Shower* terdekat, bilas tubuh secara menyeluruh.")
-            with st.expander("🔥 3. Kebakaran Kecil"): st.markdown("Gunakan *APAR* dengan teknik *PASS* (Pull, Aim, Squeeze, Sweep).")
+            st.write("Jika terjadi kecelakaan kerja, lakukan tindakan pertolongan pertama berikut secara tenang namun cepat:")
+            with st.expander("👁️ 1. Kontaminasi Bahan Kimia pada Mata"):
+                st.markdown("""
+                * *Tindakan:* Segera bawa korban ke *Eye Wash Station*.
+                * *Prosedur:* Bilas mata dengan air mengalir bersih selama minimal 15-20 menit dengan posisi kelopak mata dipaksa terbuka. 
+                * *Larangan:* Jangan menggosok mata dengan tangan atau tisu. Hubungi tim medis setelah pembilasan selesai.
+                """)
+            with st.expander("🦺 2. Tumpahan Zat Kimia Skala Besar ke Tubuh"):
+                st.markdown("""
+                * *Tindakan:* Segera menuju ke area *Safety Shower* terdekat.
+                * *Prosedur:* Tarik tuas pancuran air, lalu lepaskan jas lab atau pakaian yang terkontaminasi secara cepat di bawah guyuran air. Bilas seluruh tubuh secara menyeluruh.
+                """)
+            with st.expander("🔥 3. Kebakaran Kecil di Meja Praktikum"):
+                st.markdown("""
+                * *Tindakan:* Gunakan *APAR (Alat Pemadam Api Ringan)*.
+                * *Prosedur:* Ingat teknik *PASS* (Pull/Tarik pin, Aim/Arahkan ke sumber api, Squeeze/Tekan tuas, Sweep/Sapukan dari sisi ke sisi). Anda juga bisa menutup api kecil menggunakan kain lap yang telah dibasahi air.
+                """)
 
-    # ================= KONDISI F: PERENCANA SAMPLING LAPANGAN =================
-    elif pilihan_halaman == "📊 Perencana Sampling":
-        st.markdown("<h2 style='text-align: center; color: #0284C7;'>📊 ASISTEN PERENCANAAN SAMPLING INDUSTRI</h2>", unsafe_allow_html=True)
-        total_wadah = st.number_input("Masukkan total wadah di gudang:", min_value=1, value=25)
-        st.info(f"💡 Anda wajib mengambil sampel acak dari *{round((total_wadah * 0.5) + 1)} wadah** berbeda ($\sqrt{N}+1$).")
-
-    # ================= KONDISI G: SEGMEN KUIS BARU (DARI KAMU - FIXED BUG) =================
+    # ================= KONDISI F: SEGMEN KUIS 20 SOAL =================
     elif pilihan_halaman == "🏆 Kuis Akbar Kualitatif":
-        st.markdown("<h2 style='text-align: center; color: #0284C7;'>🏆 KUIS AKBAR: KATION & ANION INTERAKTIF</h2>", unsafe_allow_html=True)
+        st.markdown("<h2 style='text-align: center; color: #0284C7;'>🏆 KUIS AKBAR: KATION & ANION</h2>", unsafe_allow_html=True)
         st.write("Uji pemahaman mendalam Anda mengenai reaksi identifikasi kimia kualitatif di sini!")
         st.markdown("---")
 
@@ -374,7 +665,7 @@ else:
                             st.session_state.skor += 1
                         st.rerun()
                     else:
-                        st.warning("⚠️ Tolong pilih salah satu opsi terlebih dahulu!")
+                        st.warning("⚠️ Tolong pilih salah satu opsi terlebih dahulu sebelum mengirim!")
             else:
                 if pilihan == soal_sekarang["jawaban"]:
                     st.success("🎯 *Benar!* Jawaban Anda tepat sekali.")
@@ -401,20 +692,93 @@ else:
             c2.metric("Benar", f"{st.session_state.skor} Soal")
             c3.metric("Salah", f"{total_soal - st.session_state.skor} Soal")
             
-            if st.button("Ulangi Kuis 🔄", use_container_width=True):
+            st.markdown("---")
+            if skor_akhir == 100: st.subheader("🥇 Luar Biasa! Anda Master Kimia Analisis Kualitatif!")
+            elif skor_akhir >= 75: st.subheader("🥈 Kinerja Sangat Baik! Pemahaman Anda sudah sangat kuat.")
+            else: st.subheader("📚 Semangat! Terus pelajari tabel kation-anion untuk memperkuat hapalan.")
+            
+            if st.button("Ulangi Kuis (Soal akan Diacak Lagi) 🔄", use_container_width=True):
                 st.session_state.skor = 0
                 st.session_state.index_soal = 0
                 st.session_state.sudah_jawab = False
                 st.session_state.soal_acak = random.sample(SOAL_MASTER, len(SOAL_MASTER))
                 st.rerun()
 
-    # ================= KONDISI H: REFERENSI & VIDEO =================
+    # ================= KONDISI G: REFERENSI & VIDEO LENGKAP =================
     elif pilihan_halaman == "📚 Referensi & Video":
-        st.markdown("### 📚 REFERENSI METODE & MEDIA BELAJAR VIDEO")
-        st.video("https://youtu.be/dAygxePSXHg?si=MfmebJCooq7u_In6")
+        st.markdown("<h2 style='text-align: center; color: #0284C7;'>📚 REFERENSI METODE & MEDIA BELAJAR VIDEO</h2>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; color: #64748B;'>Media literatur buku teks resmi dan video demonstrasi laboratorium</p>", unsafe_allow_html=True)
+        st.markdown("---")
 
-    # ================= KONDISI I: LOGBOOK DATA =================
+        col_buku, col_yt = st.columns([1, 1])
+
+        with col_buku:
+            st.markdown("### 📖 Buku Teks & Panduan Standar")
+            st.markdown("""
+            Gunakan literatur ilmiah tepercaya di bawah ini untuk menyusun dasar teori laporan praktikum:
+            1. *Vogel's Qualitative Inorganic Analysis (G. Svehla)*
+               * Fokus: Skema pemisahan kation golongan I-V dan pembentukan endapan spesifik.
+            2. *Vogel's Textbook of Practical Organic Chemistry*
+               * Fokus: Prosedur uji reaksi penentuan gugus fungsi aldehid, keton, dan asam karboksilat.
+            3. *Official Methods of Analysis (AOAC International)*
+               * Fokus: Regulasi standar pengambilan sampel (sampling) serta preparasi sampel industri.
+            """)
+            st.info("💡 Tips Literatur: Selalu catat edisi buku dan halaman resep reagen sebagai validitas data analis.")
+
+        with col_yt:
+            st.markdown("### 📺 Video Demonstrasi Laboratorium")
+            st.markdown("Silakan pilih kategori materi video yang ingin Anda tonton langsung di bawah ini:")
+            
+            pilihan_kategori = st.selectbox(
+                "Pilih Kategori Utama:",
+                ["Uji Gugus Fungsi Organik", "Uji Kation Golongan 1", "Sistem Keselamatan Kerja K3"]
+            )
+
+            if pilihan_kategori == "Uji Gugus Fungsi Organik":
+                video_organik = st.radio(
+                    "Pilih Materi Video Organik:",
+                    ["Video 1: Tes Gugus Fungsi Utama", "Video 2: Uji Identifikasi Senyawa Organik", "Video 3: Analisis Reaksi Gugus Fungsi"]
+                )
+                if video_organik == "Video 1: Tes Gugus Fungsi Utama":
+                    st.caption("🎥 Hubungan Struktur Senyawa & Identifikasi Reaksi Kimia")
+                    st.video("https://youtu.be/dPXgUFDqSik?si=kfE5aOt1sdj5MNNm")
+                elif video_organik == "Video 2: Uji Identifikasi Senyawa Organik":
+                    st.caption("🎥 Prosedur Praktikum dan Perubahan Warna Indikator")
+                    st.video("https://youtu.be/2g8eB2FEHcA?si=K4XTS-4Swp1pJL3d")
+                elif video_organik == "Video 3: Analisis Reaksi Gugus Fungsi":
+                    st.caption("🎥 Karakteristik Sifat Fisika & Kimia Larutan Sampel")
+                    st.video("https://youtu.be/naS7RTSkmLE?si=gpiOW4oV0Qdcpmw-")
+                
+            elif pilihan_kategori == "Uji Kation Golongan 1":
+                video_kation = st.radio(
+                    "Pilih Materi Video Kation:",
+                    ["Video 1: Skema Pengendapan Kation Gol I", "Video 2: Konfirmasi Reaksi Timbal, Perak & Merkuri"]
+                )
+                if video_kation == "Video 1: Skema Pengendapan Kation Gol I":
+                    st.caption("🎥 Pemisahan Analisis Kualitatif Kation Menggunakan Reagen HCl")
+                    st.video("https://youtu.be/dAygxePSXHg?si=MfmebJCooq7u_In6")
+                elif video_kation == "Video 2: Konfirmasi Reaksi Timbal, Perak & Merkuri":
+                    st.caption("🎥 Reaksi Spesifik Pembentukan Kompleks Warna Larutan Kation")
+                    st.video("https://youtu.be/W7IKGhpKkEk?si=tJ9AUEx8qYhOZamP")
+                
+            elif pilihan_kategori == "Sistem Keselamatan Kerja K3":
+                st.caption("🎥 Prosedur Penanganan Hazard, Penggunaan APD, dan Budaya 5S/Kaizen di Lab Industri")
+                st.video("https://youtu.be/BRDApYgvDqQ?si=PUf8bBVqXsMvrJ-e")
+
+    # ================= KONDISI H: TAMPILAN LOGBOOK DATA =================
     elif pilihan_halaman == "📋 Logbook Pengujian":
-        st.markdown("### 📋 LOGBOOK DIGITAL LABORATORIUM")
-        if st.session_state["logbook_data"]:
-            st.dataframe(pd.DataFrame(st.session_state["logbook_data"]), use_container_width=True)
+        st.markdown("<h2 style='text-align: center; color: #0284C7;'>📋 LOGBOOK DIGITAL LABORATORIUM</h2>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; color: #64748B;'>Daftar riwayat rekaman pengujian & evaluasi target belajar</p>", unsafe_allow_html=True)
+        st.markdown("---")
+        
+        st.info(f"🎯 *Fokus Kompetensi Hari Ini:* {st.session_state['target_belajar']}")
+        
+        if len(st.session_state["logbook_data"]) > 0:
+            df_log = pd.DataFrame(st.session_state["logbook_data"])
+            st.dataframe(df_log, use_container_width=True)
+            
+            if st.button("🗑️ Bersihkan Semua Log"):
+                st.session_state["logbook_data"] = []
+                st.rerun()
+        else:
+            st.warning("Belum ada riwayat praktikum yang tersimpan. Silakan tentukan target belajar Anda di Beranda, lalu lakukan pengujian di area menu Ion atau Organik.")
