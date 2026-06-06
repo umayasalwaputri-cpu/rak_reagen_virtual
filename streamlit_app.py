@@ -66,7 +66,7 @@ SOAL_MASTER = [
         "pertanyaan": "Pereaksi spesifik yang digunakan untuk mengidentifikasi kation Ni^2+ (Nikel) dalam suasana amoniakal sehingga menghasilkan endapan merah rose/merah muda adalah...",
         "pilihan": ["Dimetilglioksim (DMG)", "Asam Oksalat", "Kalson", "Ditianon"],
         "jawaban": "Dimetilglioksim (DMG)",
-        "pembahasan": "Uji DMG adalah uji spesifik untuk nikel (Ni2+) yang menghasilkan kompleks kelat Ni(DMG)2 berwarna merah rose."
+        "pembahasan": "Uji DMG is uji spesifik untuk nikel (Ni2+) yang menghasilkan kompleks kelat Ni(DMG)2 berwarna merah rose."
     },
     {
         "pertanyaan": "Kation Golongan IV (Ba2+, Sr2+, Ca2+) dipisahkan dari golongan lainnya dengan mengendapkannya sebagai garam...",
@@ -167,9 +167,8 @@ if not st.session_state["login_sukses"]:
     
     _, col_login, _ = st.columns([1, 1.8, 1])
     with col_login:
-        # PANGGILAN GAMBAR LOGIN ONLINE (DIPERBARUI)
-        url_gambar_login = "https://raw.githubusercontent.com/Aris-Analitik/images/main/lab_login.jpg"
-        st.image(url_gambar_login, caption="Fasilitas Lab Kimia Analisis Kualitatif", use_container_width=True)
+        # PENGGANTI GAMBAR: Animasi Interaktif Lottie (Tabung Reaksi Kimia)
+        st.markdown('<iframe src="https://lottie.host/embed/8b512fd5-7bb8-4f16-bb70-74676878b30d/6C5fXJ6Eby.json" style="width: 100%; height: 280px; border: none; margin-bottom: 10px;"></iframe>', unsafe_allow_html=True)
             
         with st.form("form_login"):
             username = st.text_input("Username Analis", placeholder="Masukkan username...")
@@ -226,9 +225,8 @@ else:
         st.markdown("<h2 style='text-align: center; color: #0284C7;'>👋 SELAMAT DATANG DI ASISTEN LAB ANALITIK</h2>", unsafe_allow_html=True)
         st.markdown("<p style='text-align: center; color: #64748B;'>Sistem Informasi Manajemen Reagen & Instrumentasi Virtual</p>", unsafe_allow_html=True)
         
-        # PANGGILAN GAMBAR BANNER ONLINE (DIPERBARUI)
-        url_gambar_banner = "https://raw.githubusercontent.com/Aris-Analitik/images/main/lab_banner.jpg"
-        st.image(url_gambar_banner, caption="Koleksi Reagen Lab Virtual", use_container_width=True)
+        # PENGGANTI BANNER: Animasi Interaktif Lottie (Ilmuwan di Lab)
+        st.markdown('<iframe src="https://lottie.host/embed/9303d7c4-06d2-4464-ba83-5a4ddcf38bb0/b43bSPlEKK.json" style="width: 100%; height: 320px; border: none; margin-bottom: 15px;"></iframe>', unsafe_allow_html=True)
             
         st.markdown("---")
         
@@ -349,7 +347,7 @@ else:
                     if tahap_3_gol3 == "Endapan Fe(OH)3 (Tidak larut)":
                         st.write("➡️ Tambahkan $HNO_3$ (menjadi $Fe^{3+}$), lalu tambahkan $SCN^-$")
                         st.success("✨ Terbentuk kompleks $Fe(SCN)_3$ merah. Kation: *Besi(III) ($Fe^{3+}$)*")
-                        nama_reagen, kesimpulan_gugus = "HCl Filtrat -> NH4OH -> NaOH -> HNO3 + SCN-", "Kation Besi(III) (Fe³⁺)"
+                        nama_reagen, kesiaxial_gugus = "HCl Filtrat -> NH4OH -> NaOH -> HNO3 + SCN-", "Kation Besi(III) (Fe³⁺)"
                     elif tahap_3_gol3 == "Larutan Al(OH)4- (Larut)":
                         st.write("➡️ Tambahkan $HCl$ lalu $Na_2CO_3$")
                         st.success("✨ Terbentuk endapan $Al(OH)_3$ putih. Kation: *Aluminium ($Al^{3+}$)*")
@@ -375,8 +373,8 @@ else:
                             
                     elif tahap_3_gol4 == "Berupa Filtrat (Ca2+)":
                         st.write("➡️ Tambahkan $H_2C_2O_4$ dan $NH_4OH$")
-                        st.success("✨ Terbentuk endapan $CaC_2O_4$ whites. Kation: *Kalsium ($Ca^{2+}$)*")
-                        nama_reagen, kesimpulan_gugus = "Filtrat -> K2CrO4 Filtrat -> H2C2O4 + NH4OH", "Kalsium Kation (Ca²⁺)"
+                        st.success("✨ Terbentuk endapan $CaC_2O_4$ putih. Kation: *Kalsium ($Ca^{2+}$)*")
+                        nama_reagen, kesimpulan_gugus = "Filtrat -> K2CrO4 Filtrat -> H2C2O4 + NH4OH", "Kation Kalsium (Ca²⁺)"
 
         elif jenis_analisis == "Uji Anion (Non-Logam)":
             st.subheader("Uji Identifikasi Anion Spesifik")
@@ -633,7 +631,7 @@ else:
         with tab_darurat:
             st.header("🚨 Prosedur Tanggap Darurat Laboratorium")
             st.write("Jika terjadi kecelakaan kerja, lakukan tindakan pertolongan pertama berikut secara tenang namun cepat:")
-            with st.expander("👁️ 1. Kontaminasi Bahan Kimia pada Mata"):
+            with st.expander("👁️ 1. Kontaminasi Bahan Chemical pada Mata"):
                 st.markdown("""
                 * *Tindakan:* Segera bawa korban ke *Eye Wash Station*.
                 * *Prosedur:* Bilas mata dengan air mengalir bersih selama minimal 15-20 menit dengan posisi kelopak mata dipaksa terbuka. 
@@ -781,14 +779,4 @@ else:
         st.markdown("<p style='text-align: center; color: #64748B;'>Daftar riwayat rekaman pengujian & evaluasi target belajar</p>", unsafe_allow_html=True)
         st.markdown("---")
         
-        st.info(f"🎯 *Fokus Kompetensi Hari Ini:* {st.session_state['target_belajar']}")
-        
-        if len(st.session_state["logbook_data"]) > 0:
-            df_log = pd.DataFrame(st.session_state["logbook_data"])
-            st.dataframe(df_log, use_container_width=True)
-            
-            if st.button("🗑️ Bersihkan Semua Log"):
-                st.session_state["logbook_data"] = []
-                st.rerun()
-        else:
-            st.warning("Belum ada riwayat praktikum yang tersimpan. Silakan tentukan target belajar Anda di Beranda, lalu lakukan pengujian di area menu Ion atau Organik.")
+        st.info(f"🎯 *Fokus Kompetensi Hari Ini:* {
