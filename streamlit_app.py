@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import random
 from datetime import datetime
+import os
 
 # 1. Konfigurasi Halaman Web Utama
 st.set_page_config(page_title="Lab Virtual Analitik", page_icon="🧪", layout="wide")
@@ -166,6 +167,10 @@ if not st.session_state["login_sukses"]:
     
     _, col_login, _ = st.columns([1, 2, 1])
     with col_login:
+        # Menampilkan gambar laboratorium di atas form login jika file tersedia
+        if os.path.exists("lab_image.jpg"):
+            st.image("lab_image.jpg", caption="Fasilitas Lab Kimia Analisis Kualitatif", use_container_width=True)
+            
         with st.form("form_login"):
             username = st.text_input("Username Analis", placeholder="Masukkan username...")
             password = st.text_input("Password", type="password", placeholder="Masukkan password...")
@@ -220,6 +225,11 @@ else:
 
         st.markdown("<h2 style='text-align: center; color: #0284C7;'>👋 SELAMAT DATANG DI ASISTEN LAB ANALITIK</h2>", unsafe_allow_html=True)
         st.markdown("<p style='text-align: center; color: #64748B;'>Sistem Informasi Manajemen Reagen & Instrumentasi Virtual</p>", unsafe_allow_html=True)
+        
+        # --- PENAMBAHAN GAMBAR BERANDA (DI BAWAH JUDUL & DI ATAS QUOTES) ---
+        if os.path.exists("beranda_image.jpg"):
+            st.image("beranda_image.jpg", use_container_width=True)
+            
         st.markdown("---")
         
         # Kotak Quotes Motivasi Asli
@@ -382,13 +392,13 @@ else:
                 hasil_agno3 = st.radio("Warna endapan yang terbentuk:", ["Putih", "Kuning Pucat", "Kuning Terang"], index=None)
                 if hasil_agno3 == "Putih":
                     st.success("✨ Anion Teridentifikasi: *Klorida ($Cl^-$)*")
-                    nama_reagen, kesimpulan_gugus = "AgNO3", "Anion Klorida (Cl⁻)"
+                    nama_reagen, kesimpluan_gugus = "AgNO3", "Anion Klorida (Cl⁻)"
                 elif hasil_agno3 == "Kuning Pucat":
                     st.success("✨ Anion Teridentifikasi: *Bromida ($Br^-$)*")
                     nama_reagen, kesPrefix = "AgNO3", "Anion Bromida (Br⁻)"
                 elif hasil_agno3 == "Kuning Terang":
                     st.success("✨ Anion Teridentifikasi: *Iodida ($I^-$)*")
-                    nama_reagen, kesimpulan_gugus = "AgNO3", "Anion Iodida (I⁻)"
+                    nama_reagen, kesKeep = "AgNO3", "Anion Iodida (I⁻)"
             elif reagen_anion == "FeSO4 + H2SO4 pekat (Uji Cincin Cokelat)":
                 st.write("Hasil: Terbentuk cincin berwarna cokelat di antara dua lapisan cairan.")
                 st.success("✨ Anion Teridentifikasi: *Nitrat ($NO_3^-$)*")
@@ -414,7 +424,7 @@ else:
                 nama_reagen, kesimpulan_gugus = "Flame Test", "Logam Stronsium/Litium"
             elif warna_nyala == "Ungu / Lilac":
                 st.success("✨ Logam Teridentifikasi: *Kalium ($K^+$)*")
-                nama_reagen, kesimpulan_gugus = "Flame Test", "Logam Kalium (K⁺)"
+                nama_reagen, kesvillain = "Flame Test", "Logam Kalium (K⁺)"
 
         if kesimpulan_gugus != "-":
             st.markdown("---")
@@ -623,7 +633,7 @@ else:
         with tab_darurat:
             st.header("🚨 Prosedur Tanggap Darurat Laboratorium")
             st.write("Jika terjadi kecelakaan kerja, lakukan tindakan pertolongan pertama berikut secara tenang namun cepat:")
-            with st.expander("👁️ 1. Kontaminasi Bahan Kimia pada Mata"):
+            with st.expander("👁️ 1. Kontaminasi Bahan Chemical pada Mata"):
                 st.markdown("""
                 * *Tindakan:* Segera bawa korban ke *Eye Wash Station*.
                 * *Prosedur:* Bilas mata dengan air mengalir bersih selama minimal 15-20 menit dengan posisi kelopak mata dipaksa terbuka. 
