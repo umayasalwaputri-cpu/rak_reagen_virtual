@@ -43,7 +43,7 @@ SOAL_MASTER = [
         "pertanyaan": "Uji nyala (flame test) untuk kation Kalsium (Ca^2+) memberikan warna nyala yang khas, yaitu...",
         "pilihan": ["Merah bata", "Kuning", "Ungu", "Hijau"],
         "jawaban": "Merah bata",
-        "pembahasan": "Ca2+ memberikan warna merah bata. Sebagai tambahan, Na+ memberikan warna kuning, K+ berwarna ungu, dan Ba2+ berwarna hijau apel."
+        "pembahasan": "Ca2+ memberikan warna merah bata. Sebagai tambahan, Na+ memberikan warna kuning, K+ berwarna ungu, and Ba2+ berwarna hijau apel."
     },
     {
         "pertanyaan": "Uji spesifik untuk kation Amonium (NH4+) melibatkan pemanasan sampel dengan basa kuat (NaOH). Gas yang dilepaskan dapat diidentifikasi karena...",
@@ -94,7 +94,7 @@ SOAL_MASTER = [
         "pembahasan": "Cincin cokelat terbentuk akibat adanya kompleks [Fe(H2O)5(NO)]^2+ pada batas kedua cairan, menandakan adanya ion nitrat."
     },
     {
-        "pertanyaan": "Anion Halida yang memberikan endapan kuning muda (pale yellow) dengan AgNO3 dan endapan tersebut sukar larut dalam amonia encer adalah...",
+        "pertanyaan": "Anion Halida yang memberikan endapan kuning muda (pale yellow) dengan AgNO3 and endapan tersebut sukar larut dalam amonia encer adalah...",
         "pilihan": ["Bromida (Br-)", "Klorida (Cl-)", "Iodida (I-)", "Fluorida (F-)"],
         "jawaban": "Bromida (Br-)",
         "pembahasan": "AgCl (putih, mudah larut amonia), AgBr (kuning muda, sukar larut), AgI (kuning kuat, tidak larut amonia)."
@@ -127,7 +127,7 @@ SOAL_MASTER = [
         "pertanyaan": "Larutan AgNO3 jika ditambahkan ke dalam larutan yang mengandung anion Iodida (I-) akan menghasilkan endapan berwarna...",
         "pilihan": ["Kuning", "Putih", "Hitam", "Merah bata"],
         "jawaban": "Kuning",
-        "pembahasan": "Reaksi menghasilkan endapan Perak Iodida (AgI) yang berwarna kuning cerah dan tidak larut dalam larutan amonia."
+        "pembahasan": "Reaksi menghasilkan endapan Perak Iodida (AgI) yang berwarna kuning cerah and tidak larut dalam larutan amonia."
     },
     {
         "pertanyaan": "Anion manakah di bawah ini yang tidak menghasilkan endapan dengan larutan AgNO3 maupun BaCl2 dalam suasana netral?",
@@ -160,8 +160,10 @@ if "sudah_jawab" not in st.session_state:
     st.session_state.sudah_jawab = False
 
 # --- DATA GAMBAR URL LANGSUNG ---
+# Gambar untuk halaman login (Analis)
 URL_GAMBAR_LOGIN = "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800"
-URL_GAMBAR_BERANDA = "https://images.unsplash.com/photo-1617155093730-a8bf47be792d?auto=format&fit=crop&q=80&w=1200"
+# Gambar untuk beranda (Banner Minimalis Erlenmeyer Warna-warni)
+URL_GAMBAR_BERANDA_BANNER = "https://images.unsplash.com/photo-1617155093730-a8bf47be792d?auto=format&fit=crop&q=80&w=1200&h=400"
 
 # --- HALAMAN 1: FORM LOGIN ---
 if not st.session_state["login_sukses"]:
@@ -171,7 +173,7 @@ if not st.session_state["login_sukses"]:
     
     _, col_login, _ = st.columns([1, 2, 1])
     with col_login:
-        # Menampilkan gambar laboratorium di atas form login secara otomatis
+        # Menampilkan gambar laboratorium Analis di halaman depan
         st.image(URL_GAMBAR_LOGIN, caption="Fasilitas Lab Kimia Analisis Kualitatif", use_container_width=True)
             
         with st.form("form_login"):
@@ -229,8 +231,9 @@ else:
         st.markdown("<h2 style='text-align: center; color: #0284C7;'>👋 SELAMAT DATANG DI ASISTEN LAB ANALITIK</h2>", unsafe_allow_html=True)
         st.markdown("<p style='text-align: center; color: #64748B;'>Sistem Informasi Manajemen Reagen & Instrumentasi Virtual</p>", unsafe_allow_html=True)
         
-        # --- MENAMPILKAN GAMBAR BERANDA DI ATAS QUOTES ---
-        st.image(URL_GAMBAR_BERANDA, use_container_width=True)
+        # --- MENAMPILKAN GAMBAR BANNER KECIL (BERANDA) DI ATAS QUOTES ---
+        # Gambar banner horizontal yang kecil dan minimalis
+        st.image(URL_GAMBAR_BERANDA_BANNER, caption="Koleksi Reagen Lab Virtual", use_container_width=True)
             
         st.markdown("---")
         
@@ -369,7 +372,7 @@ else:
                         
                         if tahap_4_gol4 == "Endapan BaCrO4 Kuning":
                             st.success("✨ Kation: *Barium ($Ba^{2+}$)*")
-                            nama_reagen, kesimpulan_gugus = "Filtrat -> K2CrO4 -> CH3COOH", "Kation Barium (Ba²⁺)"
+                            nama_reagen, kesBuffer = "Filtrat -> K2CrO4 -> CH3COOH", "Kation Barium (Ba²⁺)"
                         elif tahap_4_gol4 == "Larutan Sr2+":
                             st.write("➡️ Tambahkan $Na_2CO_3$")
                             st.success("✨ Terbentuk endapan $SrCO_3$ putih. Kation: *Stronsium ($Sr^{2+}$)*")
@@ -378,7 +381,7 @@ else:
                     elif tahap_3_gol4 == "Berupa Filtrat (Ca2+)":
                         st.write("➡️ Tambahkan $H_2C_2O_4$ dan $NH_4OH$")
                         st.success("✨ Terbentuk endapan $CaC_2O_4$ putih. Kation: *Kalsium ($Ca^{2+}$)*")
-                        nama_reagen, kesimpulan_gugus = "Filtrat -> K2CrO4 Filtrat -> H2C2O4 + NH4OH", "Kation Kalsium (Ca²⁺)"
+                        nama_reagen, kesPrefix = "Filtrat -> K2CrO4 Filtrat -> H2C2O4 + NH4OH", "Kation Kalsium (Ca²⁺)"
 
         elif jenis_analisis == "Uji Anion (Non-Logam)":
             st.subheader("Uji Identifikasi Anion Spesifik")
@@ -397,10 +400,10 @@ else:
                     nama_reagen, kesimpulan_gugus = "AgNO3", "Anion Klorida (Cl⁻)"
                 elif hasil_agno3 == "Kuning Pucat":
                     st.success("✨ Anion Teridentifikasi: *Bromida ($Br^-$)*")
-                    nama_reagen, kesimpulan_gugus = "AgNO3", "Anion Bromida (Br⁻)"
+                    nama_reagen, kesPrefix = "AgNO3", "Anion Bromida (Br⁻)"
                 elif hasil_agno3 == "Kuning Terang":
                     st.success("✨ Anion Teridentifikasi: *Iodida ($I^-$)*")
-                    nama_reagen, kesimpulan_gugus = "AgNO3", "Anion Iodida (I⁻)"
+                    nama_reagen, kesKeep = "AgNO3", "Anion Iodida (I⁻)"
             elif reagen_anion == "FeSO4 + H2SO4 pekat (Uji Cincin Cokelat)":
                 st.write("Hasil: Terbentuk cincin berwarna cokelat di antara dua lapisan cairan.")
                 st.success("✨ Anion Teridentifikasi: *Nitrat ($NO_3^-$)*")
@@ -426,7 +429,7 @@ else:
                 nama_reagen, kesimpulan_gugus = "Flame Test", "Logam Stronsium/Litium"
             elif warna_nyala == "Ungu / Lilac":
                 st.success("✨ Logam Teridentifikasi: *Kalium ($K^+$)*")
-                nama_reagen, kesimpulan_gugus = "Flame Test", "Logam Kalium (K⁺)"
+                nama_reagen, kesvillain = "Flame Test", "Logam Kalium (K⁺)"
 
         if kesimpulan_gugus != "-":
             st.markdown("---")
@@ -635,7 +638,7 @@ else:
         with tab_darurat:
             st.header("🚨 Prosedur Tanggap Darurat Laboratorium")
             st.write("Jika terjadi kecelakaan kerja, lakukan tindakan pertolongan pertama berikut secara tenang namun cepat:")
-            with st.expander("👁️ 1. Kontaminasi Bahan Chemical pada Mata"):
+            with st.expander("👁️ 1. Kontaminasi Bahan chemical pada Mata"):
                 st.markdown("""
                 * *Tindakan:* Segera bawa korban ke *Eye Wash Station*.
                 * *Prosedur:* Bilas mata dengan air mengalir bersih selama minimal 15-20 menit dengan posisi kelopak mata dipaksa terbuka. 
