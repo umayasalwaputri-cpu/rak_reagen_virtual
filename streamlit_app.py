@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import random
 from datetime import datetime
-import os
+import base64
 
 # 1. Konfigurasi Halaman Web Utama
 st.set_page_config(page_title="Lab Virtual Analitik", page_icon="🧪", layout="wide")
@@ -159,6 +159,10 @@ if "index_soal" not in st.session_state:
 if "sudah_jawab" not in st.session_state:
     st.session_state.sudah_jawab = False
 
+# --- DATA GAMBAR URL LANGSUNG ---
+URL_GAMBAR_LOGIN = "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800"
+URL_GAMBAR_BERANDA = "https://images.unsplash.com/photo-1617155093730-a8bf47be792d?auto=format&fit=crop&q=80&w=1200"
+
 # --- HALAMAN 1: FORM LOGIN ---
 if not st.session_state["login_sukses"]:
     st.markdown("<h2 style='text-align: center; color: #0284C7;'>🔐 LOGIN SISTEM LABORATORIUM</h2>", unsafe_allow_html=True)
@@ -167,9 +171,8 @@ if not st.session_state["login_sukses"]:
     
     _, col_login, _ = st.columns([1, 2, 1])
     with col_login:
-        # Menampilkan gambar laboratorium di atas form login jika file tersedia
-        if os.path.exists("lab_image.jpg"):
-            st.image("lab_image.jpg", caption="Fasilitas Lab Kimia Analisis Kualitatif", use_container_width=True)
+        # Menampilkan gambar laboratorium di atas form login secara otomatis
+        st.image(URL_GAMBAR_LOGIN, caption="Fasilitas Lab Kimia Analisis Kualitatif", use_container_width=True)
             
         with st.form("form_login"):
             username = st.text_input("Username Analis", placeholder="Masukkan username...")
@@ -226,9 +229,8 @@ else:
         st.markdown("<h2 style='text-align: center; color: #0284C7;'>👋 SELAMAT DATANG DI ASISTEN LAB ANALITIK</h2>", unsafe_allow_html=True)
         st.markdown("<p style='text-align: center; color: #64748B;'>Sistem Informasi Manajemen Reagen & Instrumentasi Virtual</p>", unsafe_allow_html=True)
         
-        # --- PENAMBAHAN GAMBAR BERANDA (DI BAWAH JUDUL & DI ATAS QUOTES) ---
-        if os.path.exists("beranda_image.jpg"):
-            st.image("beranda_image.jpg", use_container_width=True)
+        # --- MENAMPILKAN GAMBAR BERANDA DI ATAS QUOTES ---
+        st.image(URL_GAMBAR_BERANDA, use_container_width=True)
             
         st.markdown("---")
         
@@ -367,7 +369,7 @@ else:
                         
                         if tahap_4_gol4 == "Endapan BaCrO4 Kuning":
                             st.success("✨ Kation: *Barium ($Ba^{2+}$)*")
-                            nama_reagen, kesBuffer = "Filtrat -> K2CrO4 -> CH3COOH", "Kation Barium (Ba²⁺)"
+                            nama_reagen, kesimpulan_gugus = "Filtrat -> K2CrO4 -> CH3COOH", "Kation Barium (Ba²⁺)"
                         elif tahap_4_gol4 == "Larutan Sr2+":
                             st.write("➡️ Tambahkan $Na_2CO_3$")
                             st.success("✨ Terbentuk endapan $SrCO_3$ putih. Kation: *Stronsium ($Sr^{2+}$)*")
@@ -376,7 +378,7 @@ else:
                     elif tahap_3_gol4 == "Berupa Filtrat (Ca2+)":
                         st.write("➡️ Tambahkan $H_2C_2O_4$ dan $NH_4OH$")
                         st.success("✨ Terbentuk endapan $CaC_2O_4$ putih. Kation: *Kalsium ($Ca^{2+}$)*")
-                        nama_reagen, kesPrefix = "Filtrat -> K2CrO4 Filtrat -> H2C2O4 + NH4OH", "Kation Kalsium (Ca²⁺)"
+                        nama_reagen, kesimpulan_gugus = "Filtrat -> K2CrO4 Filtrat -> H2C2O4 + NH4OH", "Kation Kalsium (Ca²⁺)"
 
         elif jenis_analisis == "Uji Anion (Non-Logam)":
             st.subheader("Uji Identifikasi Anion Spesifik")
@@ -392,13 +394,13 @@ else:
                 hasil_agno3 = st.radio("Warna endapan yang terbentuk:", ["Putih", "Kuning Pucat", "Kuning Terang"], index=None)
                 if hasil_agno3 == "Putih":
                     st.success("✨ Anion Teridentifikasi: *Klorida ($Cl^-$)*")
-                    nama_reagen, kesimpluan_gugus = "AgNO3", "Anion Klorida (Cl⁻)"
+                    nama_reagen, kesimpulan_gugus = "AgNO3", "Anion Klorida (Cl⁻)"
                 elif hasil_agno3 == "Kuning Pucat":
                     st.success("✨ Anion Teridentifikasi: *Bromida ($Br^-$)*")
-                    nama_reagen, kesPrefix = "AgNO3", "Anion Bromida (Br⁻)"
+                    nama_reagen, kesimpulan_gugus = "AgNO3", "Anion Bromida (Br⁻)"
                 elif hasil_agno3 == "Kuning Terang":
                     st.success("✨ Anion Teridentifikasi: *Iodida ($I^-$)*")
-                    nama_reagen, kesKeep = "AgNO3", "Anion Iodida (I⁻)"
+                    nama_reagen, kesimpulan_gugus = "AgNO3", "Anion Iodida (I⁻)"
             elif reagen_anion == "FeSO4 + H2SO4 pekat (Uji Cincin Cokelat)":
                 st.write("Hasil: Terbentuk cincin berwarna cokelat di antara dua lapisan cairan.")
                 st.success("✨ Anion Teridentifikasi: *Nitrat ($NO_3^-$)*")
@@ -424,7 +426,7 @@ else:
                 nama_reagen, kesimpulan_gugus = "Flame Test", "Logam Stronsium/Litium"
             elif warna_nyala == "Ungu / Lilac":
                 st.success("✨ Logam Teridentifikasi: *Kalium ($K^+$)*")
-                nama_reagen, kesvillain = "Flame Test", "Logam Kalium (K⁺)"
+                nama_reagen, kesimpulan_gugus = "Flame Test", "Logam Kalium (K⁺)"
 
         if kesimpulan_gugus != "-":
             st.markdown("---")
@@ -740,7 +742,7 @@ else:
             st.markdown("Silakan pilih kategori materi video yang ingin Anda tonton langsung di bawah ini:")
             
             pilihan_kategori = st.selectbox(
-                "Pilih Kategori Utama:",
+                "Pilihan Kategori Utama:",
                 ["Uji Gugus Fungsi Organik", "Uji Kation Golongan 1", "Sistem Keselamatan Kerja K3"]
             )
 
