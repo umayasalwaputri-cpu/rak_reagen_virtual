@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import random
 from datetime import datetime
-from PIL import Image  # Ditambahkan untuk membaca gambar dengan aman
 
 # 1. Konfigurasi Halaman Web Utama
 st.set_page_config(page_title="Lab Virtual Analitik", page_icon="🧪", layout="wide")
@@ -168,12 +167,9 @@ if not st.session_state["login_sukses"]:
     
     _, col_login, _ = st.columns([1, 1.8, 1])
     with col_login:
-        # Pengecekan Aman Gambar Login
-        try:
-            img_login = Image.open("1000783641.jpg")
-            st.image(img_login, caption="Fasilitas Lab Kimia Analisis Kualitatif", use_container_width=True)
-        except Exception:
-            st.warning("⚠️ Gambar '1000783641.jpg' tidak ditemukan di folder script.")
+        # PANGGILAN GAMBAR LOGIN ONLINE (DIPERBARUI)
+        url_gambar_login = "https://raw.githubusercontent.com/Aris-Analitik/images/main/lab_login.jpg"
+        st.image(url_gambar_login, caption="Fasilitas Lab Kimia Analisis Kualitatif", use_container_width=True)
             
         with st.form("form_login"):
             username = st.text_input("Username Analis", placeholder="Masukkan username...")
@@ -230,16 +226,13 @@ else:
         st.markdown("<h2 style='text-align: center; color: #0284C7;'>👋 SELAMAT DATANG DI ASISTEN LAB ANALITIK</h2>", unsafe_allow_html=True)
         st.markdown("<p style='text-align: center; color: #64748B;'>Sistem Informasi Manajemen Reagen & Instrumentasi Virtual</p>", unsafe_allow_html=True)
         
-        # Pengecekan Aman Gambar Beranda (Banner Mode)
-        try:
-            img_banner = Image.open("1000783642.jpg")
-            st.image(img_banner, caption="Koleksi Reagen Lab Virtual", use_container_width=True)
-        except Exception:
-            st.warning("⚠️ Gambar '1000783642.jpg' tidak ditemukan di folder script.")
+        # PANGGILAN GAMBAR BANNER ONLINE (DIPERBARUI)
+        url_gambar_banner = "https://raw.githubusercontent.com/Aris-Analitik/images/main/lab_banner.jpg"
+        st.image(url_gambar_banner, caption="Koleksi Reagen Lab Virtual", use_container_width=True)
             
         st.markdown("---")
         
-        # Kotak Quotes Motivasi Asli
+        # Kotak Quotes Motivasi
         st.markdown("""
             <div style='background-color: #E0F2FE; border-left: 6px solid #0284C7; padding: 15px; border-radius: 6px; text-align: center; margin-bottom: 25px;'>
                 <p style='color: #0369A1; font-style: italic; font-size: 16px; margin: 0;'>
@@ -249,7 +242,7 @@ else:
             </div>
         """, unsafe_allow_html=True)
 
-        # Kartu Sambutan Asli
+        # Kartu Sambutan
         st.markdown("""
             <div style='background-color: #FFFFFF; border: 1px solid #E2E8F0; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 25px;'>
                 <h4 style='color: #1E293B; margin: 0;'>Halo, Analis Kimia! 🧪</h4>
@@ -382,8 +375,8 @@ else:
                             
                     elif tahap_3_gol4 == "Berupa Filtrat (Ca2+)":
                         st.write("➡️ Tambahkan $H_2C_2O_4$ dan $NH_4OH$")
-                        st.success("✨ Terbentuk endapan $CaC_2O_4$ putih. Kation: *Kalsium ($Ca^{2+}$)*")
-                        nama_reagen, kesimpulan_gugus = "Filtrat -> K2CrO4 Filtrat -> H2C2O4 + NH4OH", "Kation Kalsium (Ca²⁺)"
+                        st.success("✨ Terbentuk endapan $CaC_2O_4$ whites. Kation: *Kalsium ($Ca^{2+}$)*")
+                        nama_reagen, kesimpulan_gugus = "Filtrat -> K2CrO4 Filtrat -> H2C2O4 + NH4OH", "Kalsium Kation (Ca²⁺)"
 
         elif jenis_analisis == "Uji Anion (Non-Logam)":
             st.subheader("Uji Identifikasi Anion Spesifik")
@@ -399,7 +392,7 @@ else:
                 hasil_agno3 = st.radio("Warna endapan yang terbentuk:", ["Putih", "Kuning Pucat", "Kuning Terang"], index=None)
                 if hasil_agno3 == "Putih":
                     st.success("✨ Anion Teridentifikasi: *Klorida ($Cl^-$)*")
-                    nama_reagen, kesimilar_gugus = "AgNO3", "Anion Klorida (Cl⁻)"
+                    nama_reagen, kesimpulan_gugus = "AgNO3", "Anion Klorida (Cl⁻)"
                 elif hasil_agno3 == "Kuning Pucat":
                     st.success("✨ Anion Teridentifikasi: *Bromida ($Br^-$)*")
                     nama_reagen, kesimpulan_gugus = "AgNO3", "Anion Bromida (Br⁻)"
